@@ -1,0 +1,56 @@
+version: "3.9"
+
+services:
+  #Brocker
+  Broker:
+    image: cpabe-dev-image:0.0
+    build: ./dockerfiles/Broker/
+    tty: true
+    volumes:
+      - ./codes/Broker/:/code
+    working_dir: /code
+    # ports:
+      # - "80:80"
+    # command: "" 
+    # environment:
+    networks:
+      devnetwork:
+        ipv4_address: 10.1.0.1
+
+  #Publisher
+  Publisher:
+    image: cpabe-dev-image:0.0
+    build: ./dockerfiles/Publisher/
+    tty: true
+    volumes:
+      - ./codes/Publisher/:/code
+    working_dir: /code
+    # command: "" 
+    # environment:
+    networks:
+      devnetwork:
+        ipv4_address: 10.1.0.2
+
+  #Subscriber
+  Subscriber:
+    image: cpabe-dev-image:0.0
+    build: ./dockerfiles/Subscriber/
+    tty: true
+    volumes:
+      - ./codes/Subscriber/:/code
+    working_dir: /code
+    # ports:
+      # - "80:80"
+    # command: "" 
+    # environment:
+    networks:
+      devnetwork:
+        ipv4_address: 10.1.0.3
+
+networks:
+  devnetwork:
+    driver: bridge
+    ipam:
+     config:
+       - subnet: 10.1.0.0/24
+         gateway: 10.1.0.254
