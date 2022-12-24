@@ -15,7 +15,7 @@ async def uptime_coro():
             ('message/public', QOS_2),
         ])
     try:
-        for i in range(1, 100):
+        while True:
             message = await C.deliver_message()
             packet = message.publish_packet
             print("%d:  %s => %s" % (i, packet.variable_header.topic_name, str(packet.payload.data,encoding='utf-8')))

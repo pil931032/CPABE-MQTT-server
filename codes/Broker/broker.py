@@ -28,7 +28,6 @@ def broker_coro():
     broker = Broker(config=config)
     yield from broker.start()
 
-
 if __name__ == '__main__':
     formatter = "[%(asctime)s] :: %(levelname)s :: %(name)s :: %(message)s"
     logging.basicConfig(level=logging.INFO, format=formatter)

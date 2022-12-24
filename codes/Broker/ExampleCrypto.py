@@ -15,9 +15,9 @@ users = {} # public user data
 authorities = {}
 
 authorityAttributes = ["ONE", "TWO", "THREE", "FOUR"]
-authority1 = "authority1"
+authority = "authority"
 
-dac.setupAuthority(GPP, authority1, authorityAttributes, authorities)
+dac.setupAuthority(GPP, authority, authorityAttributes, authorities)
 
 alice = { 'id': 'alice', 'authoritySecretKeys': {}, 'keys': None }
 alice['keys'], users[alice['id']] = dac.registerUser(GPP)
@@ -29,8 +29,8 @@ bob = { 'id': 'bob', 'authoritySecretKeys': {}, 'keys': None }
 bob['keys'], users[bob['id']] = dac.registerUser(GPP)
 
 for attr in authorityAttributes[0:-1]:
-    dac.keygen(GPP, authorities[authority1], attr, users[alice['id']], alice['authoritySecretKeys'])
-    dac.keygen(GPP, authorities[authority1], attr, users[bob['id']], bob['authoritySecretKeys'])
+    dac.keygen(GPP, authorities[authority], attr, users[alice['id']], alice['authoritySecretKeys'])
+    dac.keygen(GPP, authorities[authority], attr, users[bob['id']], bob['authoritySecretKeys'])
 
 # print(alice['authoritySecretKeys'])
 # print(alice['keys'])
@@ -40,7 +40,7 @@ k = groupObj.random(GT)
 
 policy_str = '((ONE or THREE) and (TWO or FOUR))'
 
-CT = dac.encrypt(GPP, policy_str, k, authorities[authority1])
+CT = dac.encrypt(GPP, policy_str, k, authorities[authority])
 
 TK1a = dac.generateTK(GPP, CT, alice['authoritySecretKeys'], alice['keys'][0])
 PT1a = dac.decrypt(CT, TK1a, alice['keys'][1])
@@ -53,7 +53,7 @@ print('SUCCESSFUL DECRYPTION 1')
 
 # revoke bob on "ONE"
 attribute = "ONE"
-UK = dac.ukeygen(GPP, authorities[authority1], attribute, users[alice['id']])
+UK = dac.ukeygen(GPP, authorities[authority], attribute, users[alice['id']])
 dac.skupdate(alice['authoritySecretKeys'], attribute, UK['KUK'])
 dac.ctupdate(GPP, CT, attribute, UK['CUK'])
 
