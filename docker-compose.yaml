@@ -9,8 +9,8 @@ services:
     volumes:
       - ./codes/Broker/:/code
     working_dir: /code
-    # ports:
-      # - "80:80"
+    ports:
+      - "1883:1883"
     # command: "" 
     # environment:
     networks:

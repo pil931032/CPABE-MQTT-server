@@ -4,11 +4,13 @@ import asyncio
 from amqtt.client import MQTTClient, ClientException
 from amqtt.mqtt.constants import QOS_0,QOS_1, QOS_2
 
+BROCKER_IP = '10.1.0.1'
+
 logger = logging.getLogger(__name__)
 
 async def uptime_coro():
     C = MQTTClient()
-    await C.connect('mqtt://127.0.0.1/')
+    await C.connect('mqtt://'+BROCKER_IP+'/')
     await C.subscribe([
             ('message/public', QOS_2),
         ])

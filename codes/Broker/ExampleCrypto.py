@@ -8,8 +8,8 @@ groupObj = PairingGroup('SS512')
 dac = DACMACS(groupObj)
 GPP, GMK = dac.setup()
 
-print(GPP)
-print(GMK)
+# print(GPP)
+# print(GMK)
 
 users = {} # public user data
 authorities = {}
@@ -31,6 +31,10 @@ bob['keys'], users[bob['id']] = dac.registerUser(GPP)
 for attr in authorityAttributes[0:-1]:
     dac.keygen(GPP, authorities[authority1], attr, users[alice['id']], alice['authoritySecretKeys'])
     dac.keygen(GPP, authorities[authority1], attr, users[bob['id']], bob['authoritySecretKeys'])
+
+# print(alice['authoritySecretKeys'])
+# print(alice['keys'])
+# print(authorities)
 
 k = groupObj.random(GT)
 
