@@ -27,7 +27,7 @@ def load_users_passwords():
 @app.route("/global-parameters/<user>/<password>", methods=['GET', 'POST'])
 @cross_origin()
 def global_parameters(user,password):
-  # Example http://10.1.0.1/global-parameters/Alice/abc123s
+  # Example curl  --request GET  http://10.1.0.1:443/global-parameters/Alice/abc123
   # Verify Auth
   user_password = load_users_passwords()
   try:
