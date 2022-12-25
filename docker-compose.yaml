@@ -11,6 +11,7 @@ services:
     working_dir: /code
     ports:
       - "1883:1883"
+      - "443:443"
     # command: "" 
     # environment:
     networks:
