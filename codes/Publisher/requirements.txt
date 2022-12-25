@@ -1,0 +1,4 @@
+charm-crypto
+gpiozero
+psutil
+pycryptodome
