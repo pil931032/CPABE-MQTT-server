@@ -4,3 +4,5 @@ pyyaml
 flask
 flask-cors
 pyOpenSSL
+pycryptodome
+requests

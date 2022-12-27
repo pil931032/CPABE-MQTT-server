@@ -3,6 +3,7 @@ from flask_cors import CORS, cross_origin
 import yaml
 import json
 from OpenSSL import SSL
+from Decryption import Decryption
 
 # OpenSSL
 context = SSL.Context(SSL.TLSv1_2_METHOD)
@@ -28,4 +29,6 @@ def decrypt():
   CT = request.form.get('CT')
   AuthoritySecretKeys = request.form.get('AuthoritySecretKeys')
   UserKey = request.form.get('UserKey')
-  return {"Info":'Test'}
+  decryption = Decryption()
+  TK1a = decryption.outsourcing_decryption(GPP, CT, AuthoritySecretKeys, UserKey)
+  return {"result": TK1a}
