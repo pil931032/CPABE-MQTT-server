@@ -1,6 +1,8 @@
 import logging
 import asyncio
 import yaml
+import json
+from Decryption import Decryption
 
 from amqtt.client import MQTTClient, ClientException
 from amqtt.mqtt.constants import QOS_0,QOS_1, QOS_2
@@ -21,14 +23,20 @@ async def uptime_coro():
             await C.subscribe([('message/public', QOS_2),])
             message = await C.deliver_message()
             packet = message.publish_packet
-            print("%d:  %s => %s" % (i, packet.variable_header.topic_name, str(packet.payload.data,encoding='utf-8')))
-            i+=1
-            await C.unsubscribe(['message/public'])
-            await C.disconnect()
+            message_text = str(packet.payload.data,encoding='utf-8')
+            # print("%d:  %s => %s" % (i, packet.variable_header.topic_name, message_text))
+            message_obj = json.loads(message_text)
+            Cipher_AES_Key = message_obj['Cipher_AES_Key']
+            Cipher_Text = message_obj['Cipher_Text']
+            # print(Cipher_Text)
+            decryption = Decryption()
+            decryption.decryption(Cipher_AES_Key,Cipher_Text)
+        await C.unsubscribe(['message/public'])
+        await C.disconnect()
     except ClientException as ce:
         logger.error("Client exception: %s" % ce)
 
 if __name__ == '__main__':
-    formatter = "[%(asctime)s] %(name)s {%(filename)s:%(lineno)d} %(levelname)s - %(message)s"
+    # formatter = "[%(asctime)s] %(name)s {%(filename)s:%(lineno)d} %(levelname)s - %(message)s"
     # logging.basicConfig(level=logging.DEBUG, format=formatter)
     asyncio.get_event_loop().run_until_complete(uptime_coro())
