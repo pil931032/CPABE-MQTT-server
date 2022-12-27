@@ -57,7 +57,7 @@ class Encryption:
         # Load server ip
         setting = self.load_setting()
         # Receice global parameters
-        r = requests.get('http://'+setting['BrockerIP']+':443/broker/global-parameters/'+'Alice'+'/'+'abc123')
+        r = requests.get('http://'+setting['BrockerIP']+':443/broker/global-parameters/'+'Publisher-1'+'/'+'abc123')
         json_obj = json.loads(r.text)
         GPP = bytesToObject(json_obj['GPP'], PairingGroup('SS512'))
         authority = bytesToObject(json_obj['authority'], PairingGroup('SS512'))
@@ -83,8 +83,10 @@ class Encryption:
         CT = dac.encrypt(GPP, policy_str, AES_key_before_serialization, authorities)
         cipher_AES_key = objectToBytes(CT, PairingGroup('SS512')).decode("utf-8")
         cipher_text = self.AES_encrypt(message,cipher_AES_key)
+        print(AES_key_before_serialization)
         return (cipher_AES_key,cipher_text)
 
 if __name__ == '__main__':
     encryption = Encryption()
     encryption.encrypt('123')
+    

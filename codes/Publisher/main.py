@@ -1,4 +1,4 @@
-import logging
+# import logging
 import asyncio
 import yaml
 import time
@@ -20,7 +20,7 @@ async def main_loop(setting):
         counter += 1
         message = Message()
         message_text = message.get()
-        print(message_text)
+        # print(message_text)
         MQTT_client = MQTTClient()
         await MQTT_client.connect('mqtt://'+setting['BrockerIP']+'/')
         tasks = [
