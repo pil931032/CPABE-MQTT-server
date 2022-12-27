@@ -15,9 +15,7 @@ def load_setting():
 
 # Main loop
 async def main_loop(setting):
-    counter = 0
     while True:
-        counter += 1
         message = Message()
         message_text = message.get()
         # print(message_text)
@@ -27,10 +25,10 @@ async def main_loop(setting):
             asyncio.ensure_future(MQTT_client.publish('message/public', message_text.encode(encoding='utf-8'), qos=QOS_2)),
         ]
         time.sleep(int(setting['IntervelTimeSecond']))
-    await asyncio.wait(tasks)
-    await MQTT_client.disconnect()
+        await asyncio.wait(tasks)
+        await MQTT_client.disconnect()
 
 # Main function
 if __name__ == '__main__':
-    setting:dict = load_setting()
+    setting = load_setting()
     asyncio.get_event_loop().run_until_complete(main_loop(setting))
