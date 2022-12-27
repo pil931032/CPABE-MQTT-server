@@ -119,7 +119,6 @@ class Decryption:
         # AES
         AES_key = objectToBytes(PT1a,PairingGroup('SS512')).decode("utf-8")
         result = self.AES_decrypt(cipher_text,AES_key)
-        print(result)
         return result
 
 

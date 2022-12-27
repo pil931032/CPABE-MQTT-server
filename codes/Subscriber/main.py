@@ -3,7 +3,7 @@ import asyncio
 import yaml
 import json
 from Decryption import Decryption
-
+from Render import Render
 from amqtt.client import MQTTClient, ClientException
 from amqtt.mqtt.constants import QOS_0,QOS_1, QOS_2
 
@@ -28,15 +28,25 @@ async def uptime_coro():
             message_obj = json.loads(message_text)
             Cipher_AES_Key = message_obj['Cipher_AES_Key']
             Cipher_Text = message_obj['Cipher_Text']
-            # print(Cipher_Text)
             decryption = Decryption()
-            decryption.decryption(Cipher_AES_Key,Cipher_Text)
+            result = json.loads(decryption.decryption(Cipher_AES_Key,Cipher_Text))
+            render = Render()
+            render.table(
+                CPU_Temperature=str(result['CPU_Temperature']),
+                CPU_Usage=str(result['CPU_Usage']),
+                RAM_Usage=str(result['RAM_Usage']),
+                Decrypted_text = json.dumps(result),
+                Cipher_Key = Cipher_AES_Key,
+                Cipher_Text = Cipher_Text,
+                Brocker_IP = setting['BrockerIP'],
+                Proxy_IP = setting['ProxyIP']
+            )
         await C.unsubscribe(['message/public'])
         await C.disconnect()
-    except ClientException as ce:
-        logger.error("Client exception: %s" % ce)
+    except Exception as e:
+        print(e)
+        await C.unsubscribe(['message/public'])
+        await C.disconnect()
 
 if __name__ == '__main__':
-    # formatter = "[%(asctime)s] %(name)s {%(filename)s:%(lineno)d} %(levelname)s - %(message)s"
-    # logging.basicConfig(level=logging.DEBUG, format=formatter)
     asyncio.get_event_loop().run_until_complete(uptime_coro())
