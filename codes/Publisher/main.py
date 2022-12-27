@@ -34,7 +34,8 @@ async def main_loop(setting):
             Cipher_Key = message_object['Cipher_AES_Key'],
             Cipher_Text = message_object['Cipher_Text'],
             Policy = setting['Policy'],
-            Brocker_IP = setting['BrockerIP']
+            Brocker_IP = setting['BrockerIP'],
+            Topic = 'message/public'
         )
         # MQTT send
         MQTT_client = MQTTClient()
