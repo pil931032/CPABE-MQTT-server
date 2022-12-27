@@ -119,9 +119,14 @@ class Decryption:
         # AES
         AES_key = objectToBytes(PT1a,PairingGroup('SS512')).decode("utf-8")
         result = self.AES_decrypt(cipher_text,AES_key)
-        return result
+        # Extract User Attribute
+        Attribute_AK = user_key['authoritySecretKeys']['AK']
+        user_attribute = []
+        for attribute in Attribute_AK:
+            user_attribute.append(attribute)
+        user_attribute = json.dumps(user_attribute)
+        return (result,user_attribute)
 
 
 if __name__ == '__main__':
-    decryption = Decryption()
-    decryption.outsourcing("1","2","3","4")
+    pass
