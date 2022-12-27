@@ -89,7 +89,7 @@ class Encryption:
         # Test Decode
         test_d = cipher_AES_key.encode('utf-8')
         bytesToObject(test_d,PairingGroup('SS512'))
-        print('Success!',cipher_AES_key)
+        # print('Success!',cipher_AES_key)
         return (cipher_AES_key,cipher_text)
 
 if __name__ == '__main__':
