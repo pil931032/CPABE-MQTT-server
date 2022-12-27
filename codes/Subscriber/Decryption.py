@@ -54,7 +54,7 @@ class Decryption:
         # Load server ip
         setting = self.load_setting()
         # Receice global parameters
-        r = requests.get('http://'+setting['BrockerIP']+':443/broker/global-parameters/'+'Alice'+'/'+'abc123')
+        r = requests.get('http://'+setting['BrockerIP']+':443/subscriber/global-parameters/'+'Tom'+'/'+'ccc123')
         json_obj = json.loads(r.text)
         GPP = bytesToObject(json_obj['GPP'], PairingGroup('SS512'))
         authority = bytesToObject(json_obj['authority'], PairingGroup('SS512'))
@@ -70,4 +70,6 @@ class Decryption:
         pass
 
 if __name__ == '__main__':
+    decryption = Decryption()
+    print(decryption.get_global_parameter())
     pass
