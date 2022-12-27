@@ -34,7 +34,8 @@ async def uptime_coro():
             Cipher_AES_Key = message_obj['Cipher_AES_Key']
             Cipher_Text = message_obj['Cipher_Text']
             decryption = Decryption()
-            result = json.loads(decryption.decryption(Cipher_AES_Key,Cipher_Text))
+            plain_text, user_attribute= decryption.decryption(Cipher_AES_Key,Cipher_Text)
+            result = json.loads(plain_text)
             render = Render()
             render.table(
                 CPU_Temperature=str(result['CPU_Temperature']),
@@ -45,7 +46,8 @@ async def uptime_coro():
                 Cipher_Text = Cipher_Text,
                 Brocker_IP = setting['BrockerIP'],
                 Proxy_IP = setting['ProxyIP'],
-                User = user_password['user']
+                User = user_password['user'],
+                User_ATTRIBUTE = user_attribute
             )
         await C.unsubscribe(['message/public'])
         await C.disconnect()
