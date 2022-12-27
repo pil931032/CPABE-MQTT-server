@@ -38,4 +38,4 @@ RUN set -ex \
 
 COPY .bashrc /root/.bashrc
 COPY requirements.txt .
-RUN pip install -r requirements.txt
+RUN  pip install --upgrade pip && pip install -r requirements.txt

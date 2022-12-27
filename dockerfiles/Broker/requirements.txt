@@ -1,4 +1,0 @@
-charm-crypto
-amqtt
-# websockets==8.1
-pyyaml
