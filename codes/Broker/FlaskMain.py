@@ -20,7 +20,7 @@ def load_keys():
 
 # Load users_passwords
 def load_users_passwords():
-    with open('user_password.yaml', 'r') as f:
+    with open('publisher_user_password.yaml', 'r') as f:
         return yaml.safe_load(f)
 
 # Send Global Parameter
