@@ -28,4 +28,4 @@ class Message:
 
         self.message['Cipher_AES_Key'] = cipher_AES_Key
         self.message['Cipher_Text'] = cipher_text
-        return json.dumps(self.message)
+        return (json.dumps(self.message),plain_text)

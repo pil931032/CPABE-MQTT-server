@@ -73,8 +73,9 @@ class Encryption:
         dac = DACMACS(PairingGroup('SS512'))
         string_encode = StringEncode()
         message_int:int = string_encode.string_to_integer(message)
-
-        policy_str = '((OFFICER or WORKER) and (DEVELOPER or MAINTAINER))'
+        # Load server ip
+        setting = self.load_setting()
+        policy_str = setting['Policy']
 
         GPP,authorities = self.get_global_parameter()
 
