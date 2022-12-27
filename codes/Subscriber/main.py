@@ -13,8 +13,13 @@ def load_setting():
     with open('setting.yaml', 'r') as f:
         return yaml.safe_load(f)
 
+def load_subscriber_user_password():
+    with open('subscriber_user_password.yaml', 'r') as f:
+        return yaml.safe_load(f)
+
 async def uptime_coro():
     setting = load_setting()
+    user_password = load_subscriber_user_password()
     C = MQTTClient()
     try:
         i = 0
@@ -39,7 +44,8 @@ async def uptime_coro():
                 Cipher_Key = Cipher_AES_Key,
                 Cipher_Text = Cipher_Text,
                 Brocker_IP = setting['BrockerIP'],
-                Proxy_IP = setting['ProxyIP']
+                Proxy_IP = setting['ProxyIP'],
+                User = user_password['user']
             )
         await C.unsubscribe(['message/public'])
         await C.disconnect()
