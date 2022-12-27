@@ -57,7 +57,7 @@ class Encryption:
         # Load server ip
         setting = self.load_setting()
         # Receice global parameters
-        r = requests.get('http://'+setting['BrockerIP']+':443/broker/global-parameters/'+'Alice'+'/'+'abc123')
+        r = requests.get('http://'+setting['BrockerIP']+':443/broker/global-parameters/'+'Publisher-1'+'/'+'abc123')
         json_obj = json.loads(r.text)
         GPP = bytesToObject(json_obj['GPP'], PairingGroup('SS512'))
         authority = bytesToObject(json_obj['authority'], PairingGroup('SS512'))
@@ -80,9 +80,16 @@ class Encryption:
 
         # Generate A String for AES Key
         AES_key_before_serialization  = PairingGroup('SS512').random(GT)
+        AES_Key_base64_utf8 = objectToBytes(AES_key_before_serialization,PairingGroup('SS512')).decode("utf-8")
         CT = dac.encrypt(GPP, policy_str, AES_key_before_serialization, authorities)
         cipher_AES_key = objectToBytes(CT, PairingGroup('SS512')).decode("utf-8")
-        cipher_text = self.AES_encrypt(message,cipher_AES_key)
+        cipher_text = self.AES_encrypt(message,AES_Key_base64_utf8)
+        # print("Origin AES Key")
+        # print(AES_Key_base64_utf8)
+        # Test Decode
+        test_d = cipher_AES_key.encode('utf-8')
+        bytesToObject(test_d,PairingGroup('SS512'))
+        print('Success!',cipher_AES_key)
         return (cipher_AES_key,cipher_text)
 
 if __name__ == '__main__':
