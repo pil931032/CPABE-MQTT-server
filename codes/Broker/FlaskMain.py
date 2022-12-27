@@ -19,17 +19,62 @@ def load_keys():
         return yaml.safe_load(f)
 
 # Load users_passwords
-def load_users_passwords():
+def load_publisher_users_passwords():
     with open('publisher_user_password.yaml', 'r') as f:
+        return yaml.safe_load(f)
+
+# Load users_passwords
+def load_subscriber_users_passwords():
+    with open('subscriber_user_password.yaml', 'r') as f:
         return yaml.safe_load(f)
 
 # Send Global Parameter
 @app.route("/broker/global-parameters/<user>/<password>", methods=['GET', 'POST'])
 @cross_origin()
-def global_parameters(user,password):
+def broker_global_parameters(user,password):
   # Example curl  --request GET  http://10.1.0.1:443/broker/global-parameters/Alice/abc123
   # Verify Auth
-  user_password = load_users_passwords()
+  user_password = load_publisher_users_passwords()
+  try:
+    if user_password[user] != password:
+      return {'code':0}
+  except:
+    return {'code':0}
+  # Send Global Parameters
+  global_parameters = dict()
+  keys = load_keys()
+  global_parameters['GPP'] = keys['GPP']
+  global_parameters['authority'] = keys['authority']
+  global_parameters:str = json.dumps(global_parameters)
+  return global_parameters
+
+# Send Global Parameter
+@app.route("/subscriber/global-parameters/<user>/<password>", methods=['GET', 'POST'])
+@cross_origin()
+def subscriber_global_parameters(user,password):
+  # Example curl  --request GET  http://127.0.0.1:443/subscriber/global-parameters/Tom/ccc123
+  # Verify Auth
+  user_password = load_subscriber_users_passwords()
+  try:
+    if user_password[user] != password:
+      return {'code':0}
+  except:
+    return {'code':0}
+  # Send Global Parameters
+  global_parameters = dict()
+  keys = load_keys()
+  global_parameters['GPP'] = keys['GPP']
+  global_parameters['authority'] = keys['authority']
+  global_parameters:str = json.dumps(global_parameters)
+  return global_parameters
+
+# Send user decrypt keys
+@app.route("/subscriber/decrypt-keys/<user>/<password>", methods=['GET', 'POST'])
+@cross_origin()
+def subscriber_decrypt_keys(user,password):
+  # Example curl  --request GET  http://127.0.0.1:443/subscriber/decrypt-keys/Alice/ccc123
+  # Verify Auth
+  user_password = load_subscriber_users_passwords()
   try:
     if user_password[user] != password:
       return {'code':0}
