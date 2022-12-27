@@ -27,18 +27,10 @@ async def main_loop(setting):
             asyncio.ensure_future(MQTT_client.publish('message/public', message_text.encode(encoding='utf-8'), qos=QOS_2)),
         ]
         await asyncio.wait(tasks)
-        # logger.info("messages published")
         await MQTT_client.disconnect()
         time.sleep(int(setting['IntervelTimeSecond']))
 
 # Main function
 if __name__ == '__main__':
-    # Log
-    # formatter = "[%(asctime)s] %(name)s {%(filename)s:%(lineno)d} %(levelname)s - %(message)s"
-    # logging.basicConfig(level=logging.DEBUG, format=formatter)
-
-    # Load Setting
     setting:dict = load_setting()
-    
-    # Start send message
     asyncio.get_event_loop().run_until_complete(main_loop(setting))
