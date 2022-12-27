@@ -11,7 +11,7 @@ class Render:
         table = Table()
 
         table.add_column("Title", justify="right", style="cyan", no_wrap=True)
-        table.add_column("Publisher Device Information", justify="left", style="green")
+        table.add_column("Subscriber", justify="left", style="green")
 
         table.add_row("Device", "Raspberry Pi 3 Model A+")
         table.add_row("CPU Temperature", CPU_Temperature + " °C")
