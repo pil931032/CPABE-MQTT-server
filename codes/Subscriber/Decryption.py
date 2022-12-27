@@ -101,7 +101,8 @@ class Decryption:
             'UserKey' : UserKey
         }
         r = requests.post('http://'+setting['ProxyIP']+':8080/decrypt/', data = data)
-        print(r.text)
+        json_obj = json.loads(r.text)
+        return bytesToObject(json_obj['result'],PairingGroup('SS512'))
 
     def decryption(self,cipher_key:str,cipher_text:str):
         # CPABE
@@ -110,10 +111,10 @@ class Decryption:
         decryption = Decryption()
         user_key = self.get_subscriber_decrypt_keys()
         GPP,authority = self.get_global_parameter()
-        TK1a = dac.generateTK(GPP, CT, user_key['authoritySecretKeys'], user_key['keys'][0])
+        # Self Decrypt
+        # TK1a = dac.generateTK(GPP, CT, user_key['authoritySecretKeys'], user_key['keys'][0])
         # outsourcing
-        self.outsourcing(GPP, CT, user_key['authoritySecretKeys'], user_key['keys'][0])
-        
+        TK1a = self.outsourcing(GPP, CT, user_key['authoritySecretKeys'], user_key['keys'][0])
         PT1a = dac.decrypt(CT, TK1a, user_key['keys'][1])
         # AES
         AES_key = objectToBytes(PT1a,PairingGroup('SS512')).decode("utf-8")
