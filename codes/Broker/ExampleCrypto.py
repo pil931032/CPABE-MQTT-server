@@ -40,6 +40,8 @@ k = groupObj.random(GT)
 
 policy_str = '((ONE or THREE) and (TWO or FOUR))'
 
+print(GPP)
+
 CT = dac.encrypt(GPP, policy_str, k, authorities[authority])
 
 TK1a = dac.generateTK(GPP, CT, alice['authoritySecretKeys'], alice['keys'][0])

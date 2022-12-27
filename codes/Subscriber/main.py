@@ -10,19 +10,17 @@ logger = logging.getLogger(__name__)
 
 async def uptime_coro():
     C = MQTTClient()
-    await C.connect('mqtt://'+BROCKER_IP+'/')
-    await C.subscribe([
-            ('message/public', QOS_2),
-        ])
     try:
         i = 0
         while True:
+            await C.connect('mqtt://'+BROCKER_IP+'/')
+            await C.subscribe([('message/public', QOS_2),])
             message = await C.deliver_message()
             packet = message.publish_packet
             print("%d:  %s => %s" % (i, packet.variable_header.topic_name, str(packet.payload.data,encoding='utf-8')))
             i+=1
-        await C.unsubscribe(['message/public'])
-        await C.disconnect()
+            await C.unsubscribe(['message/public'])
+            await C.disconnect()
     except ClientException as ce:
         logger.error("Client exception: %s" % ce)
 

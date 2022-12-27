@@ -24,10 +24,10 @@ def load_users_passwords():
         return yaml.safe_load(f)
 
 # Send Global Parameter
-@app.route("/global-parameters/<user>/<password>", methods=['GET', 'POST'])
+@app.route("/broker/global-parameters/<user>/<password>", methods=['GET', 'POST'])
 @cross_origin()
 def global_parameters(user,password):
-  # Example curl  --request GET  http://10.1.0.1:443/global-parameters/Alice/abc123
+  # Example curl  --request GET  http://10.1.0.1:443/broker/global-parameters/Alice/abc123
   # Verify Auth
   user_password = load_users_passwords()
   try:
