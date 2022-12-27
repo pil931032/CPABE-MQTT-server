@@ -59,7 +59,7 @@ class Decryption:
         setting = self.load_setting()
         user_password = self.load_subscriber_user_password()
         # Receice global parameters
-        r = requests.get('http://'+setting['BrockerIP']+':443/subscriber/global-parameters/'+user_password['user']+'/'+user_password['password'])
+        r = requests.get('http://'+setting['BrockerIP']+':443/subscriber/global-parameters/'+user_password['user']+'/'+user_password['password'], verify=False)
         json_obj = json.loads(r.text)
         GPP = bytesToObject(json_obj['GPP'], PairingGroup('SS512'))
         authority = bytesToObject(json_obj['authority'], PairingGroup('SS512'))
