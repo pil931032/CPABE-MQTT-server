@@ -4,7 +4,7 @@ services:
   #Brocker
   Broker:
     image: cpabe-dev-image:0.0
-    build: ./dockerfiles/Broker/
+    build: ./dockerfiles/Base/
     tty: true
     volumes:
       - ./codes/Broker/:/code
@@ -18,35 +18,21 @@ services:
       devnetwork:
         ipv4_address: 10.1.0.1
 
-  #Publisher
-  Publisher:
+  #Proxy
+  Proxy:
     image: cpabe-dev-image:0.0
-    build: ./dockerfiles/Publisher/
+    build: ./dockerfiles/Base/
     tty: true
     volumes:
-      - ./codes/Publisher/:/code
+      - ./codes/Proxy/:/code
     working_dir: /code
+    ports:
+      - "8080:8080"
     # command: "" 
     # environment:
     networks:
       devnetwork:
         ipv4_address: 10.1.0.2
-
-  #Subscriber
-  Subscriber:
-    image: cpabe-dev-image:0.0
-    build: ./dockerfiles/Subscriber/
-    tty: true
-    volumes:
-      - ./codes/Subscriber/:/code
-    working_dir: /code
-    # ports:
-      # - "80:80"
-    # command: "" 
-    # environment:
-    networks:
-      devnetwork:
-        ipv4_address: 10.1.0.3
 
 networks:
   devnetwork:
