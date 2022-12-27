@@ -9,8 +9,13 @@ from Crypto.Cipher import AES
 from Crypto.Random import get_random_bytes
 import json
 import hashlib
+import yaml
+import requests
 
 class Encryption:
+    def load_setting(self):
+        with open('setting.yaml', 'r') as f:
+            return yaml.safe_load(f)
 
     def AES_encrypt(self,message:str,key:str):
         message = message.encode("utf-8")
@@ -42,42 +47,44 @@ class Encryption:
         except (ValueError, KeyError):
             print("Incorrect decryption")
 
+    def generate_AES_Key(self):
+        pass
+
+    def get_global_parameter(self):
+        """
+        return GPP, authority
+        """
+        # Load server ip
+        setting = self.load_setting()
+        # Receice global parameters
+        r = requests.get('http://'+setting['BrockerIP']+':443/broker/global-parameters/'+'Alice'+'/'+'abc123')
+        json_obj = json.loads(r.text)
+        GPP = bytesToObject(json_obj['GPP'], PairingGroup('SS512'))
+        authority = bytesToObject(json_obj['authority'], PairingGroup('SS512'))
+        # Create GPP H function
+        groupObj = PairingGroup('SS512')
+        dac = DACMACS(groupObj)
+        temp_GPP, temp_GMK = dac.setup()
+        GPP['H']= temp_GPP['H']
+        # Retrun
+        return (GPP,tuple(authority))
+
     def encrypt(self,message:str):
+        dac = DACMACS(PairingGroup('SS512'))
         string_encode = StringEncode()
         message_int:int = string_encode.string_to_integer(message)
 
-        dac = DACMACS(PairingGroup('SS512'))
-        GPP, GMK = dac.setup()
+        policy_str = '((OFFICER or WORKER) and (DEVELOPER or MAINTAINER))'
 
-        users = {} # public user data
-        authorities = {}
-
-        authorityAttributes = ["ONE", "TWO", "THREE", "FOUR"]
-        authority1 = "authority1"
-        policy_str = '((ONE or THREE) and (TWO or FOUR))'
-
-        dac.setupAuthority(GPP, authority1, authorityAttributes, authorities)
-
-        alice = { 'id': 'alice', 'authoritySecretKeys': {}, 'keys': None }
-        alice['keys'], users[alice['id']] = dac.registerUser(GPP)
-
-        bob = { 'id': 'bob', 'authoritySecretKeys': {}, 'keys': None }
-        bob['keys'], users[bob['id']] = dac.registerUser(GPP)
-
-        for attr in authorityAttributes[0:-1]:
-            dac.keygen(GPP, authorities[authority1], attr, users[alice['id']], alice['authoritySecretKeys'])
-            dac.keygen(GPP, authorities[authority1], attr, users[bob['id']], bob['authoritySecretKeys'])
+        GPP,authorities = self.get_global_parameter()
 
         # Generate A String for AES Key
         AES_key_before_serialization  = PairingGroup('SS512').random(GT)
-        CT = dac.encrypt(GPP, policy_str, AES_key_before_serialization, authorities[authority1])
+        CT = dac.encrypt(GPP, policy_str, AES_key_before_serialization, authorities)
         cipher_AES_key = objectToBytes(CT, PairingGroup('SS512')).decode("utf-8")
-
-        return cipher_AES_key
+        cipher_text = self.AES_encrypt(message,cipher_AES_key)
+        return (cipher_AES_key,cipher_text)
 
 if __name__ == '__main__':
     encryption = Encryption()
-    cipher = encryption.AES_encrypt('咕咕雞','馬克思直呼內行')
-    print(cipher)
-    result = encryption.AES_decrypt(cipher,'馬克思直呼內行')
-    print("解密後",result)
+    encryption.encrypt('123')
