@@ -83,7 +83,6 @@ def subscriber_decrypt_keys(user,password):
   # Send Global Parameters
   global_parameters = dict()
   keys = load_keys()
-  global_parameters['GPP'] = keys['GPP']
-  global_parameters['authority'] = keys['authority']
-  global_parameters:str = json.dumps(global_parameters)
-  return global_parameters
+  keys = keys[user]
+  keys:str = json.dumps({'decrypt-keys':keys})
+  return keys
