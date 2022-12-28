@@ -22,10 +22,9 @@ async def uptime_coro():
     user_password = load_subscriber_user_password()
     C = MQTTClient()
     await C.connect('mqtt://'+setting['BrockerIP']+'/')
-    await C.subscribe([('message/public', QOS_0),])
+    await C.subscribe([('message/public', QOS_2),])
     while True:
         try:
-
             message = await C.deliver_message()
             packet = message.publish_packet
             message_text = str(packet.payload.data,encoding='utf-8')
@@ -53,7 +52,6 @@ async def uptime_coro():
         except Exception as e:
             await C.unsubscribe(['message/public'])
             await C.disconnect()
-            print(e)
             break
 
 
