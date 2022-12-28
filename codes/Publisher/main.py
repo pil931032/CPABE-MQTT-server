@@ -23,30 +23,35 @@ async def main_loop(setting):
     MQTT_client = MQTTClient()
     
     while True:
-        await MQTT_client.connect('mqtt://'+setting['BrockerIP']+'/')
-        message = Message()
-        message_text,plain_text = message.get()
-        message_object = json.loads(message_text)
-        plain_text_object = json.loads(plain_text)
-        tasks = [
-            asyncio.ensure_future(MQTT_client.publish('message/public', message_text.encode(encoding='utf-8'), qos=QOS_2)),
-        ]
-        # Rende Table
-        render = Render()
-        render.table(
-            CPU_Temperature = str(plain_text_object['CPU_Temperature']),
-            CPU_Usage = str(plain_text_object['CPU_Usage']),
-            RAM_Usage = str(plain_text_object['RAM_Usage']),
-            Plain_text = plain_text,
-            Cipher_Key = message_object['Cipher_AES_Key'],
-            Cipher_Text = message_object['Cipher_Text'],
-            Policy = setting['Policy'],
-            Brocker_IP = setting['BrockerIP'],
-            Topic = '/message/public'
-        )
-        await asyncio.wait(tasks)
-        await MQTT_client.disconnect()
-        time.sleep(int(setting['IntervelTimeSecond']))
+        try:
+            await MQTT_client.connect('mqtt://'+setting['BrockerIP']+'/')
+            message = Message()
+            message_text,plain_text = message.get()
+            message_object = json.loads(message_text)
+            plain_text_object = json.loads(plain_text)
+            tasks = [
+                asyncio.ensure_future(MQTT_client.publish('message/public', message_text.encode(encoding='utf-8'), qos=QOS_2)),
+            ]
+            # Rende Table
+            render = Render()
+            render.table(
+                CPU_Temperature = str(plain_text_object['CPU_Temperature']),
+                CPU_Usage = str(plain_text_object['CPU_Usage']),
+                RAM_Usage = str(plain_text_object['RAM_Usage']),
+                Plain_text = plain_text,
+                Cipher_Key = message_object['Cipher_AES_Key'],
+                Cipher_Text = message_object['Cipher_Text'],
+                Policy = setting['Policy'],
+                Brocker_IP = setting['BrockerIP'],
+                Topic = '/message/public'
+            )
+            await asyncio.wait(tasks)
+            await MQTT_client.disconnect()
+            time.sleep(int(setting['IntervelTimeSecond']))
+        except KeyboardInterrupt:
+            await C.unsubscribe(['message/public'])
+            await C.disconnect()
+            break
 
 
 # Main function
