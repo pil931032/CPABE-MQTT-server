@@ -21,11 +21,11 @@ async def uptime_coro():
     setting = load_setting()
     user_password = load_subscriber_user_password()
     C = MQTTClient()
-    try:
-        i = 0
-        while True:
-            await C.connect('mqtt://'+setting['BrockerIP']+'/')
-            await C.subscribe([('message/public', QOS_2),])
+    await C.connect('mqtt://'+setting['BrockerIP']+'/')
+    await C.subscribe([('message/public', QOS_0),])
+    while True:
+        try:
+
             message = await C.deliver_message()
             packet = message.publish_packet
             message_text = str(packet.payload.data,encoding='utf-8')
@@ -35,6 +35,7 @@ async def uptime_coro():
             Cipher_Text = message_obj['Cipher_Text']
             decryption = Decryption()
             plain_text, user_attribute= decryption.decryption(Cipher_AES_Key,Cipher_Text)
+            print(plain_text)
             result = json.loads(plain_text)
             render = Render()
             render.table(
@@ -49,12 +50,12 @@ async def uptime_coro():
                 User = user_password['user'],
                 User_ATTRIBUTE = user_attribute
             )
-        await C.unsubscribe(['message/public'])
-        await C.disconnect()
-    except Exception as e:
-        print(e)
-        await C.unsubscribe(['message/public'])
-        await C.disconnect()
+        except Exception as e:
+            await C.unsubscribe(['message/public'])
+            await C.disconnect()
+            print(e)
+            break
+
 
 if __name__ == '__main__':
     asyncio.get_event_loop().run_until_complete(uptime_coro())
