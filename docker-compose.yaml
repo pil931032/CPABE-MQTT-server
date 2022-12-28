@@ -11,12 +11,11 @@ services:
     working_dir: /code
     ports:
       - "1883:1883"
-      - "443:443"
-    # command: "" 
+      # - "443:443"
+    command: "./RUN.sh "
     # environment:
     networks:
       devnetwork:
-        ipv4_address: 10.1.0.1
 
   #Proxy
   Proxy:
@@ -28,11 +27,24 @@ services:
     working_dir: /code
     ports:
       - "8080:8080"
-    # command: "" 
+    command: "./RUN.sh "
     # environment:
     networks:
       devnetwork:
-        ipv4_address: 10.1.0.2
+
+  #SSL Proxy
+  ssl-reverse-proxy:
+    image: nginx:1.22
+    working_dir: /etc/nginx/conf.d/
+    tty: true
+    ports:
+      - "443:443"
+    volumes:
+      - ./codes/ssl-reverse-proxy/config:/etc/nginx/conf.d/
+      - ./codes/ssl-reverse-proxy/ssl:/etc/ssl/custom
+    #網路IP設置
+    networks:
+      - devnetwork
 
 networks:
   devnetwork:
