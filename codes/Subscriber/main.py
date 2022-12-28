@@ -6,6 +6,7 @@ from Decryption import Decryption
 from Render import Render
 from amqtt.client import MQTTClient, ClientException
 from amqtt.mqtt.constants import QOS_0,QOS_1, QOS_2
+import datetime
 
 logger = logging.getLogger(__name__)
 
@@ -30,24 +31,27 @@ async def uptime_coro():
             message_text = str(packet.payload.data,encoding='utf-8')
             # print("%d:  %s => %s" % (i, packet.variable_header.topic_name, message_text))
             message_obj = json.loads(message_text)
+            start_time = datetime.datetime.fromtimestamp(message_obj['UTC-Time'])
+            receive_time = datetime.datetime.now()
+            print(receive_time - start_time)
             Cipher_AES_Key = message_obj['Cipher_AES_Key']
             Cipher_Text = message_obj['Cipher_Text']
             decryption = Decryption()
             plain_text, user_attribute= decryption.decryption(Cipher_AES_Key,Cipher_Text)
             result = json.loads(plain_text)
-            render = Render()
-            render.table(
-                CPU_Temperature=str(result['CPU_Temperature']),
-                CPU_Usage=str(result['CPU_Usage']),
-                RAM_Usage=str(result['RAM_Usage']),
-                Decrypted_text = json.dumps(result),
-                Cipher_Key = Cipher_AES_Key,
-                Cipher_Text = Cipher_Text,
-                Brocker_IP = setting['BrockerIP'],
-                Proxy_IP = setting['ProxyIP'],
-                User = user_password['user'],
-                User_ATTRIBUTE = user_attribute
-            )
+            # render = Render()
+            # render.table(
+            #     CPU_Temperature=str(result['CPU_Temperature']),
+            #     CPU_Usage=str(result['CPU_Usage']),
+            #     RAM_Usage=str(result['RAM_Usage']),
+            #     Decrypted_text = json.dumps(result),
+            #     Cipher_Key = Cipher_AES_Key,
+            #     Cipher_Text = Cipher_Text,
+            #     Brocker_IP = setting['BrockerIP'],
+            #     Proxy_IP = setting['ProxyIP'],
+            #     User = user_password['user'],
+            #     User_ATTRIBUTE = user_attribute
+            # )
         except KeyboardInterrupt:
             await C.unsubscribe(['message/public'])
             await C.disconnect()
