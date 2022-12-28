@@ -11,8 +11,12 @@ import json
 import hashlib
 import yaml
 import requests
+import warnings
 
 class Decryption:
+    def __init__(self):
+        warnings.filterwarnings("ignore")
+
     def load_setting(self):
         with open('setting.yaml', 'r') as f:
             return yaml.safe_load(f)
@@ -59,7 +63,7 @@ class Decryption:
         setting = self.load_setting()
         user_password = self.load_subscriber_user_password()
         # Receice global parameters
-        r = requests.get('http://'+setting['BrockerIP']+':443/subscriber/global-parameters/'+user_password['user']+'/'+user_password['password'], verify=False)
+        r = requests.get('https://'+setting['BrockerIP']+':443/subscriber/global-parameters/'+user_password['user']+'/'+user_password['password'], verify=False)
         json_obj = json.loads(r.text)
         GPP = bytesToObject(json_obj['GPP'], PairingGroup('SS512'))
         authority = bytesToObject(json_obj['authority'], PairingGroup('SS512'))
@@ -76,7 +80,7 @@ class Decryption:
         setting = self.load_setting()
         user_password = self.load_subscriber_user_password()
         # Receice global parameters
-        r = requests.get('http://'+setting['BrockerIP']+':443/subscriber/decrypt-keys/'+user_password['user']+'/'+user_password['password'])
+        r = requests.get('https://'+setting['BrockerIP']+':443/subscriber/decrypt-keys/'+user_password['user']+'/'+user_password['password'], verify=False)
         obj = json.loads(r.text)
         keys = obj['decrypt-keys']
         keys = bytesToObject(keys,PairingGroup('SS512'))
@@ -100,7 +104,7 @@ class Decryption:
             'AuthoritySecretKeys' : AuthoritySecretKeys,
             'UserKey' : UserKey
         }
-        r = requests.post('http://'+setting['ProxyIP']+':8080/decrypt/', data = data)
+        r = requests.post('https://'+setting['ProxyIP']+':8080/decrypt/', data = data, verify=False)
         json_obj = json.loads(r.text)
         return bytesToObject(json_obj['result'],PairingGroup('SS512'))
 

@@ -34,7 +34,6 @@ async def uptime_coro():
             Cipher_Text = message_obj['Cipher_Text']
             decryption = Decryption()
             plain_text, user_attribute= decryption.decryption(Cipher_AES_Key,Cipher_Text)
-            print(plain_text)
             result = json.loads(plain_text)
             render = Render()
             render.table(
@@ -49,7 +48,7 @@ async def uptime_coro():
                 User = user_password['user'],
                 User_ATTRIBUTE = user_attribute
             )
-        except Exception as e:
+        except KeyboardInterrupt:
             await C.unsubscribe(['message/public'])
             await C.disconnect()
             break
