@@ -9,6 +9,7 @@ from Render import Render
 import json
 from gpiozero import CPUTemperature
 import psutil
+import datetime
 
 # logger = logging.getLogger(__name__)
 
@@ -32,6 +33,7 @@ async def main_loop(setting):
             tasks = [
                 asyncio.ensure_future(MQTT_client.publish('message/public', message_text.encode(encoding='utf-8'), qos=QOS_2)),
             ]
+            # datetime_string = datetime.datetime.fromtimestamp(message_object['UTC-Time']).strftime('%Y-%m-%d %H:%M:%S')
             # Rende Table
             render = Render()
             render.table(
@@ -43,14 +45,14 @@ async def main_loop(setting):
                 Cipher_Text = message_object['Cipher_Text'],
                 Policy = setting['Policy'],
                 Brocker_IP = setting['BrockerIP'],
-                Topic = '/message/public'
+                Topic = '/message/public',
+                # Time = datetime_string
             )
             await asyncio.wait(tasks)
             await MQTT_client.disconnect()
             time.sleep(int(setting['IntervelTimeSecond']))
         except KeyboardInterrupt:
-            await C.unsubscribe(['message/public'])
-            await C.disconnect()
+            await MQTT_client.disconnect()
             break
 
 

@@ -6,7 +6,7 @@ import os
 
 class Render:
 
-    def table(self,CPU_Temperature="N/A",CPU_Usage="N/A",RAM_Usage="N/A",Cipher_Key="N/A",Cipher_Text="N/A",Plain_text="N/A",Brocker_IP="N/A",Proxy_IP="N/A",Policy="N/A",Topic="N/A"):
+    def table(self,CPU_Temperature="N/A",CPU_Usage="N/A",RAM_Usage="N/A",Cipher_Key="N/A",Cipher_Text="N/A",Plain_text="N/A",Brocker_IP="N/A",Proxy_IP="N/A",Policy="N/A",Topic="N/A",Time="N/A"):
         os.system('clear')
         table = Table()
 
@@ -23,6 +23,7 @@ class Render:
         table.add_row("Brocker IP", Brocker_IP)
         table.add_row("Policy", Policy)
         table.add_row("Topic", Topic)
+        # table.add_row("Time", Time)
         console = Console()
         console.print(table)
 
