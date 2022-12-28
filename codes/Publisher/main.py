@@ -19,6 +19,9 @@ def load_setting():
 
 # Main loop
 async def main_loop(setting):
+    # MQTT send
+    MQTT_client = MQTTClient()
+    await MQTT_client.connect('mqtt://'+setting['BrockerIP']+'/')
     while True:
         try:
             message = Message()
@@ -38,9 +41,6 @@ async def main_loop(setting):
                 Brocker_IP = setting['BrockerIP'],
                 Topic = '/message/public'
             )
-            # MQTT send
-            MQTT_client = MQTTClient()
-            await MQTT_client.connect('mqtt://'+setting['BrockerIP']+'/')
             tasks = [
                 asyncio.ensure_future(MQTT_client.publish('message/public', message_text.encode(encoding='utf-8'), qos=QOS_2)),
             ]

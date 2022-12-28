@@ -1,4 +1,4 @@
-BrockerIP: 192.168.98.252
+BrockerIP: 192.168.184.252
 BrockerLoginPassword: 123456
 IntervelTimeSecond: 2
 Policy: ((OFFICER or WORKER) and (DEVELOPER or MAINTAINER))
