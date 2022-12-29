@@ -48,7 +48,7 @@ class Render:
         table.add_row("Outsourcing Decrypt Time", Outsourcing_Time+" s",style="bright_cyan")
         table.add_row("Local Decrypt time", Local_Decrypt_time+" s",style="bright_cyan")
         table.add_row("Decrypt total Time", Decrypt_Time+" s",style="bright_red")
-        table.add_row("Total Time", Total_Time+" s",style="gold3")
+        table.add_row("Total Time", Total_Time+" s",style="bright_red")
         # Table 2
         # table2 = Table()
         # table2.add_column("Cipher AES Key", justify="center", style="cyan", no_wrap=True)
