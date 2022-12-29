@@ -40,7 +40,7 @@ async def uptime_coro():
             decryption = Decryption()
             start_decrypt_time = datetime.datetime.now()
             try:
-                plain_text, user_attribute= decryption.decryption(Cipher_AES_Key,Cipher_Text)
+                plain_text,user_attribute,outsourcing_total_time,local_decrypt_total_time = decryption.decryption(Cipher_AES_Key,Cipher_Text)
             except:
                 os.system('clear')
                 print( Fore.RED + "========= Decrypt fail =========")
@@ -52,7 +52,9 @@ async def uptime_coro():
             total_time_string = str((finish_time - start_time).total_seconds())
             total_decrypt_time = str((finish_decrypt_time - start_decrypt_time).total_seconds())
             transmission_time = str((receive_time - start_time).total_seconds())
-            # Render
+            outsourcing_total_time = str(outsourcing_total_time.total_seconds())
+            local_decrypt_total_time =  str(local_decrypt_total_time.total_seconds())
+            Render
             result = json.loads(plain_text)
             render = Render()
             render.table(
@@ -68,6 +70,8 @@ async def uptime_coro():
                 User_ATTRIBUTE = user_attribute,
                 Decrypt_Time = total_decrypt_time,
                 Transmission_Time = transmission_time,
+                Outsourcing_Time = outsourcing_total_time,
+                Local_Decrypt_time = local_decrypt_total_time,
                 Total_Time = total_time_string,
             )
         except KeyboardInterrupt:

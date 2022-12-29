@@ -20,11 +20,14 @@ class Render:
                 Proxy_IP="N/A",
                 User="N/A",
                 User_ATTRIBUTE="N/A",
-                Total_Time="N/A",
                 Transmission_Time = "N/A",
                 Decrypt_Time = "N/A",
+                Outsourcing_Time = "N/A",
+                Local_Decrypt_time = "N/A",
+                Total_Time="N/A",
             ):
         os.system('clear')
+        Decrypt_Setup_Time = str(float(Decrypt_Time) - (float(Outsourcing_Time)+float(Local_Decrypt_time)))
         # Table 1
         table = Table()
         table.add_column("", justify="right", style="cyan", no_wrap=True)
@@ -41,7 +44,10 @@ class Render:
         table.add_row("Brocker IP", Brocker_IP,style="gold3")
         table.add_row("Proxy IP", Proxy_IP,style="gold3")
         table.add_row("Transmission Time", Transmission_Time+" s",style="gold3")
-        table.add_row("Decrypt Time", Decrypt_Time+" s",style="gold3")
+        table.add_row("Decrypt setup Time", Decrypt_Setup_Time+" s",style="bright_cyan")
+        table.add_row("Outsourcing Decrypt Time", Outsourcing_Time+" s",style="bright_cyan")
+        table.add_row("Local Decrypt time", Local_Decrypt_time+" s",style="bright_cyan")
+        table.add_row("Decrypt total Time", Decrypt_Time+" s",style="bright_red")
         table.add_row("Total Time", Total_Time+" s",style="gold3")
         # Table 2
         # table2 = Table()

@@ -12,6 +12,7 @@ import hashlib
 import yaml
 import requests
 import warnings
+import datetime
 
 class Decryption:
     def __init__(self):
@@ -117,19 +118,26 @@ class Decryption:
         GPP,authority = self.get_global_parameter()
         # Self Decrypt
         # TK1a = dac.generateTK(GPP, CT, user_key['authoritySecretKeys'], user_key['keys'][0])
-        # outsourcing
+        # Outsourcing decrypt
+        outsourcing_start_time = datetime.datetime.now()
         TK1a = self.outsourcing(GPP, CT, user_key['authoritySecretKeys'], user_key['keys'][0])
+        outsourcing_end_time = datetime.datetime.now()
+        outsourcing_total_time = outsourcing_end_time - outsourcing_start_time
+        # Local decrypt
+        local_decrypt_start_time = datetime.datetime.now()
         PT1a = dac.decrypt(CT, TK1a, user_key['keys'][1])
         # AES
         AES_key = objectToBytes(PT1a,PairingGroup('SS512')).decode("utf-8")
         result = self.AES_decrypt(cipher_text,AES_key)
+        local_decrypt_end_time = datetime.datetime.now()
+        local_decrypt_total_time = local_decrypt_end_time - local_decrypt_start_time
         # Extract User Attribute
         Attribute_AK = user_key['authoritySecretKeys']['AK']
         user_attribute = []
         for attribute in Attribute_AK:
             user_attribute.append(attribute)
         user_attribute = json.dumps(user_attribute)
-        return (result,user_attribute)
+        return (result,user_attribute,outsourcing_total_time,local_decrypt_total_time)
 
 
 if __name__ == '__main__':
