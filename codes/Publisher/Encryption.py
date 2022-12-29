@@ -59,7 +59,7 @@ class Encryption:
         # Load server ip
         setting = self.load_setting()
         # Receice global parameters
-        r = requests.get('https://'+setting['BrockerIP']+':443/broker/global-parameters/'+'Publisher-1'+'/'+'abc123',verify=False)
+        r = requests.get('https://'+setting['BrockerIP']+':443/broker/global-parameters/'+setting['BrockerLoginUser']+'/'+setting['BrockerLoginPassword'],verify=False)
         json_obj = json.loads(r.text)
         GPP = bytesToObject(json_obj['GPP'], PairingGroup('SS512'))
         authority = bytesToObject(json_obj['authority'], PairingGroup('SS512'))
