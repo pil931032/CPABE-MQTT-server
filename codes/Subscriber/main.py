@@ -31,27 +31,30 @@ async def uptime_coro():
             message_text = str(packet.payload.data,encoding='utf-8')
             # print("%d:  %s => %s" % (i, packet.variable_header.topic_name, message_text))
             message_obj = json.loads(message_text)
+            # Time-consuming calculation
             start_time = datetime.datetime.fromtimestamp(message_obj['UTC-Time'])
             receive_time = datetime.datetime.now()
-            print(receive_time - start_time)
+            time_consuming_string = str((receive_time - start_time).total_seconds())
+            # Cipher Text
             Cipher_AES_Key = message_obj['Cipher_AES_Key']
             Cipher_Text = message_obj['Cipher_Text']
             decryption = Decryption()
             plain_text, user_attribute= decryption.decryption(Cipher_AES_Key,Cipher_Text)
             result = json.loads(plain_text)
-            # render = Render()
-            # render.table(
-            #     CPU_Temperature=str(result['CPU_Temperature']),
-            #     CPU_Usage=str(result['CPU_Usage']),
-            #     RAM_Usage=str(result['RAM_Usage']),
-            #     Decrypted_text = json.dumps(result),
-            #     Cipher_Key = Cipher_AES_Key,
-            #     Cipher_Text = Cipher_Text,
-            #     Brocker_IP = setting['BrockerIP'],
-            #     Proxy_IP = setting['ProxyIP'],
-            #     User = user_password['user'],
-            #     User_ATTRIBUTE = user_attribute
-            # )
+            render = Render()
+            render.table(
+                CPU_Temperature=str(result['CPU_Temperature']),
+                CPU_Usage=str(result['CPU_Usage']),
+                RAM_Usage=str(result['RAM_Usage']),
+                Decrypted_text = json.dumps(result),
+                Cipher_Key = Cipher_AES_Key,
+                Cipher_Text = Cipher_Text,
+                Brocker_IP = setting['BrockerIP'],
+                Proxy_IP = setting['ProxyIP'],
+                User = user_password['user'],
+                User_ATTRIBUTE = user_attribute,
+                Decryption_Time = time_consuming_string
+            )
         except KeyboardInterrupt:
             await C.unsubscribe(['message/public'])
             await C.disconnect()
