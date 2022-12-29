@@ -7,6 +7,8 @@ from Render import Render
 from amqtt.client import MQTTClient, ClientException
 from amqtt.mqtt.constants import QOS_0,QOS_1, QOS_2
 import datetime
+import os
+from colorama import Fore, Back, Style
 
 logger = logging.getLogger(__name__)
 
@@ -34,9 +36,15 @@ async def uptime_coro():
             # Cipher Text
             Cipher_AES_Key = message_obj['Cipher_AES_Key']
             Cipher_Text = message_obj['Cipher_Text']
+            # Decryption
             decryption = Decryption()
             start_decrypt_time = datetime.datetime.now()
-            plain_text, user_attribute= decryption.decryption(Cipher_AES_Key,Cipher_Text)
+            try:
+                plain_text, user_attribute= decryption.decryption(Cipher_AES_Key,Cipher_Text)
+            except:
+                os.system('clear')
+                print( Fore.RED + "========= Decrypt fail =========")
+                continue
             finish_decrypt_time = datetime.datetime.now()
             # Time-consuming calculation
             start_time = datetime.datetime.fromtimestamp(message_obj['UTC-Time'])
