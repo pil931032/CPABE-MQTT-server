@@ -29,17 +29,21 @@ async def uptime_coro():
             message = await C.deliver_message()
             packet = message.publish_packet
             message_text = str(packet.payload.data,encoding='utf-8')
-            # print("%d:  %s => %s" % (i, packet.variable_header.topic_name, message_text))
+            receive_time = datetime.datetime.now()
             message_obj = json.loads(message_text)
             # Cipher Text
             Cipher_AES_Key = message_obj['Cipher_AES_Key']
             Cipher_Text = message_obj['Cipher_Text']
             decryption = Decryption()
+            start_decrypt_time = datetime.datetime.now()
             plain_text, user_attribute= decryption.decryption(Cipher_AES_Key,Cipher_Text)
+            finish_decrypt_time = datetime.datetime.now()
             # Time-consuming calculation
             start_time = datetime.datetime.fromtimestamp(message_obj['UTC-Time'])
-            receive_time = datetime.datetime.now()
-            time_consuming_string = str((receive_time - start_time).total_seconds())
+            finish_time = datetime.datetime.now()
+            total_time_string = str((finish_time - start_time).total_seconds())
+            total_decrypt_time = str((finish_decrypt_time - start_decrypt_time).total_seconds())
+            transmission_time = str((receive_time - start_time).total_seconds())
             # Render
             result = json.loads(plain_text)
             render = Render()
@@ -54,7 +58,9 @@ async def uptime_coro():
                 Proxy_IP = setting['ProxyIP'],
                 User = user_password['user'],
                 User_ATTRIBUTE = user_attribute,
-                Decryption_Time = time_consuming_string
+                Decrypt_Time = total_decrypt_time,
+                Transmission_Time = transmission_time,
+                Total_Time = total_time_string,
             )
         except KeyboardInterrupt:
             await C.unsubscribe(['message/public'])

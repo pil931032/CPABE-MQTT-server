@@ -9,7 +9,21 @@ from rich.markdown import Markdown
 
 class Render:
 
-    def table(self,CPU_Temperature="N/A",CPU_Usage="N/A",RAM_Usage="N/A",Cipher_Key="N/A",Cipher_Text="N/A",Decrypted_text="N/A",Brocker_IP="N/A",Proxy_IP="N/A",User="N/A",User_ATTRIBUTE="N/A",Decryption_Time="N/A"):
+    def table(self,
+                CPU_Temperature="N/A",
+                CPU_Usage="N/A",
+                RAM_Usage="N/A",
+                Cipher_Key="N/A",
+                Cipher_Text="N/A",
+                Decrypted_text="N/A",
+                Brocker_IP="N/A",
+                Proxy_IP="N/A",
+                User="N/A",
+                User_ATTRIBUTE="N/A",
+                Total_Time="N/A",
+                Transmission_Time = "N/A",
+                Decrypt_Time = "N/A",
+            ):
         os.system('clear')
         # Table 1
         table = Table()
@@ -25,8 +39,10 @@ class Render:
         table.add_row("Cipher AES Key", Cipher_Key,style="gold3")
         table.add_row("Cipher Text", Cipher_Text,style="gold3")
         table.add_row("Brocker IP", Brocker_IP,style="gold3")
-        table.add_row("Proxy IP", Proxy_IP,style="gold3")        
-        table.add_row("Decryption Time", Decryption_Time+" s",style="gold3") 
+        table.add_row("Proxy IP", Proxy_IP,style="gold3")
+        table.add_row("Transmission Time", Transmission_Time+" s",style="gold3")
+        table.add_row("Decrypt Time", Decrypt_Time+" s",style="gold3")
+        table.add_row("Total Time", Total_Time+" s",style="gold3")
         # Table 2
         # table2 = Table()
         # table2.add_column("Cipher AES Key", justify="center", style="cyan", no_wrap=True)
