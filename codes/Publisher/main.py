@@ -7,8 +7,8 @@ from amqtt.client import MQTTClient
 from amqtt.mqtt.constants import QOS_0, QOS_1, QOS_2
 from Render import Render
 import json
-from gpiozero import CPUTemperature
-import psutil
+#from gpiozero import CPUTemperature
+# import psutil
 import datetime
 
 # logger = logging.getLogger(__name__)

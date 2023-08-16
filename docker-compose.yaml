@@ -32,20 +32,52 @@ services:
     networks:
       devnetwork:
 
-  # #SSL Proxy
-  # ssl-reverse-proxy:
-  #   image: nginx:1.22
-  #   working_dir: /etc/nginx/conf.d/
-  #   tty: true
-  #   ports:
-  #     - "443:443"
-  #     - "8080:8080"
-  #   volumes:
-  #     - ./codes/ssl-reverse-proxy/config:/etc/nginx/conf.d/
-  #     - ./codes/ssl-reverse-proxy/ssl:/etc/ssl/custom
-  #   #網路IP設置
-  #   networks:
-  #     - devnetwork
+  #SSL Proxy
+  ssl-reverse-proxy:
+    image: nginx:1.22
+    working_dir: /etc/nginx/conf.d/
+    tty: true
+    ports:
+      - "443:443"
+      - "8080:8080"
+    volumes:
+      - ./codes/ssl-reverse-proxy/config:/etc/nginx/conf.d/
+      - ./codes/ssl-reverse-proxy/ssl:/etc/ssl/custom
+    #網路IP設置
+    networks:
+      - devnetwork
+
+  #Publisher
+  Publisher:
+    image: cpabe-dev-image:0.0
+    build: ./dockerfiles/Base/
+    tty: true
+    volumes:
+      - ./codes/Publisher/:/code
+    working_dir: /code
+    command: sh
+    # environment:
+    networks:
+      devnetwork:
+
+
+
+  #Subscriber
+  Subscriber:
+    image: cpabe-dev-image:0.0
+    build: ./dockerfiles/Base/
+    tty: true
+    volumes:
+      - ./codes/Subscriber/:/code
+    working_dir: /code
+    # ports:
+      # - "80:80"
+    command: sh
+    # environment:
+    networks:
+      devnetwork:
+
+
 
 networks:
   devnetwork:

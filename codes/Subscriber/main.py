@@ -39,12 +39,12 @@ async def uptime_coro():
             # Decryption
             decryption = Decryption()
             start_decrypt_time = datetime.datetime.now()
-            try:
-                plain_text,user_attribute,outsourcing_total_time,local_decrypt_total_time = decryption.decryption(Cipher_AES_Key,Cipher_Text)
-            except:
-                os.system('clear')
-                print( Fore.RED + "========= Decrypt fail =========")
-                continue
+            # try:
+            plain_text,user_attribute,outsourcing_total_time,local_decrypt_total_time = decryption.decryption(Cipher_AES_Key,Cipher_Text)
+            # except:
+            #     os.system('clear')
+            #     print( Fore.RED + "========= Decrypt fail =========")
+            #     continue
             finish_decrypt_time = datetime.datetime.now()
             # Time-consuming calculation
             start_time = datetime.datetime.fromtimestamp(message_obj['UTC-Time'])
