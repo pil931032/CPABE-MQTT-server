@@ -18,9 +18,9 @@ class Message:
         # cpu = CPUTemperature()
         string_encode = StringEncode()
         plain_text_message = dict()
-        plain_text_message['CPU_Temperature'] = "40 degree"#cpu.temperature
-        plain_text_message['CPU_Usage'] = "cpu usage"#psutil.cpu_percent()
-        plain_text_message['RAM_Usage'] = "memory usage"#psutil.virtual_memory().percent
+        plain_text_message['CPU_Temperature'] = "test_temperature"#cpu.temperature
+        plain_text_message['CPU_Usage'] = "test_cpu_usage"#psutil.cpu_percent()
+        plain_text_message['RAM_Usage'] = "test_ram_usage"#psutil.virtual_memory().percent
         plain_text = json.dumps(plain_text_message)
         
         encryption = Encryption()

@@ -95,6 +95,6 @@ class Encryption:
         # print('Success!',cipher_AES_key)
         return (cipher_AES_key,cipher_text)
 
-if __name__ == '__main__':
-    encryption = Encryption()
-    encryption.encrypt('123')
+# if __name__ == '__main__':
+#     encryption = Encryption()
+#     encryption.encrypt('123')

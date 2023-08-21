@@ -31,10 +31,10 @@ class Render:
         # Table 1
         table = Table()
         table.add_column("", justify="right", style="cyan", no_wrap=True)
-        table.add_column("Subscriber <- Broker <- Publisher", justify="left", style="green")
+        table.add_column("Proxy -> Subscriber", justify="left", style="green")
         table.add_row("User", User)
         table.add_row("User attribute", User_ATTRIBUTE,end_section=True)
-        table.add_row("Remote Device", "Raspberry Pi 3 Model A+", style="gold3")
+        table.add_row("Sender Device", "Raspberry Pi 3 Model B+", style="gold3")
         table.add_row("CPU Temperature", CPU_Temperature + " °C",style="gold3")
         table.add_row("CPU Usage", CPU_Usage +" %",style="gold3")
         table.add_row("RAM Usage", RAM_Usage +" %",style="gold3")

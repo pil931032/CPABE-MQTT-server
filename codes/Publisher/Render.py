@@ -13,7 +13,7 @@ class Render:
         table.add_column("", justify="right", style="cyan", no_wrap=True)
         table.add_column("Publisher -> Broker", justify="left", style="red")
 
-        table.add_row("Device", "Raspberry Pi 3 Model A+")
+        table.add_row("Device", "Raspberry Pi 3 Model B+")
         table.add_row("CPU Temperature", CPU_Temperature + " °C")
         table.add_row("CPU Usage", CPU_Usage +" %")
         table.add_row("RAM Usage", RAM_Usage +" %")
