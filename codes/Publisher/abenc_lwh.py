@@ -25,23 +25,27 @@ class ABENCLWH(DACMACS):
         
         return (GPP, GMK)
 
-    def registerUser(self, GPP):
-        pass
+    # def registerUser(self, GPP):
+    #     pass
 
-    def setupAuthority(self, GPP, authorityid, attributes, authorities):
-        pass
+    # def setupAuthority(self, GPP, authorityid, attributes, authorities):
+    #     pass
 
-    def keygen(self, GPP, authority, attribute, userObj, USK = None):
-        pass
+    # def keygen(self, GPP, authority, attribute, userObj, USK = None):
+    #     pass
 
-    def encrypt(self, GPP, policy_str, k, authority):
-        pass
+    # def encrypt(self, GPP, policy_str, k, authority):
+    #     pass
 
-    def generateTK(self, GPP, CT, UASK, g_u):
-        pass
+    # def generateTK(self, GPP, CT, UASK, g_u):
+    #     pass
 
-    def decrypt(self, CT, TK, z):
-        pass
+    # def decrypt(self, CT, TK, z):
+    #     pass
 
-    def ukeygen(self, GPP, authority, attribute, userObj):
-        pass
+    # def ukeygen(self, GPP, authority, attribute, userObj):
+    #     pass
+
+if __name__ == '__main__':
+    groupObj = PairingGroup('SS512')
+    dac = ABENCLWH(groupObj)
