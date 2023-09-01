@@ -1,7 +1,7 @@
 from charm.toolbox.pairinggroup import PairingGroup,ZR,G1,GT,pair
 from charm.toolbox.secretutil import SecretUtil
 from charm.toolbox.ABEncMultiAuth import ABEncMultiAuth
-from charm.schemes.abenc.abenc_dacmacs_yj14 import DACMACS
+from abenc_lwh import ABENCLWH
 from charm.core.engine.util import objectToBytes,bytesToObject
 from StringEncode import StringEncode
 from base64 import b64encode,b64decode
@@ -65,14 +65,14 @@ class Encryption:
         authority = bytesToObject(json_obj['authority'], PairingGroup('SS512'))
         # Create GPP H function
         groupObj = PairingGroup('SS512')
-        dac = DACMACS(groupObj)
+        dac = ABENCLWH(groupObj)
         temp_GPP, temp_GMK = dac.setup()
         GPP['H']= temp_GPP['H']
         # Retrun
         return (GPP,tuple(authority))
 
     def encrypt(self,message:str):
-        dac = DACMACS(PairingGroup('SS512'))
+        dac = ABENCLWH(PairingGroup('SS512'))
         string_encode = StringEncode()
         message_int:int = string_encode.string_to_integer(message)
         # Load server ip
