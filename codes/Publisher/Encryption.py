@@ -80,7 +80,7 @@ class Encryption:
         policy_str = setting['Policy']
 
         GPP,authorities = self.get_global_parameter()
-
+        # print(authorities)
         # Generate A String for AES Key
         AES_key_before_serialization  = PairingGroup('SS512').random(GT)
         AES_Key_base64_utf8 = objectToBytes(AES_key_before_serialization,PairingGroup('SS512')).decode("utf-8")
@@ -94,7 +94,11 @@ class Encryption:
         bytesToObject(test_d,PairingGroup('SS512'))
         # print('Success!',cipher_AES_key)
         return (cipher_AES_key,cipher_text)
+    
+    # def policyCompare(): #policy compare algorithm
+        
+    #     return I_1,I_2,I_3
 
-# if __name__ == '__main__':
-#     encryption = Encryption()
-#     encryption.encrypt('123')
+if __name__ == '__main__':
+    encryption = Encryption()
+    encryption.encrypt('123')

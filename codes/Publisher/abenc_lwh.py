@@ -34,9 +34,41 @@ class ABENCLWH(DACMACS):
     # def keygen(self, GPP, authority, attribute, userObj, USK = None):
     #     pass
 
-    # def encrypt(self, GPP, policy_str, k, authority):
-    #     pass
+    def encrypt(self, GPP, policy_str, k, authority):
+        '''Generate the cipher-text from the content(-key) and a policy (executed by the content owner)'''
+        #GPP are global parameters
+        #k is the content key (group element based on AES key)
+        #policy_str is the policy string
+        #authority is the authority tuple
+        
+        _, APK, authAttrs = authority
+        policy = self.util.createPolicy(policy_str)
+        print(policy)
+        print(type(policy))
+        secret = self.group.random()
+        shares = self.util.calculateSharesList(secret, policy)  #list
+        # print(shares)
+        shares = dict([(x[0].getAttributeAndIndex(), x[1]) for x in shares])  #dict
+        # print(shares)
+        C1 = k * (APK['e_alpha'] ** secret)
+        C2 = GPP['g'] ** secret
+        C3 = APK['g_beta_inv'] ** secret
+        C = {}
+        D = {}
+        DS = {}
 
+        for attr, s_share in shares.items():
+            k_attr = self.util.strip_index(attr)
+            r_i = self.group.random()
+            attrPK = authAttrs[attr]
+            C[attr] = (GPP['g_a'] ** s_share) * ~(attrPK['PK'] ** r_i)
+            D[attr] = APK['g_beta_inv'] ** r_i
+            DS[attr] = ~(APK['g_beta_gamma'] ** r_i)
+        
+        return {'C1': C1, 'C2': C2, 'C3': C3, 'C': C, 'D': D, 'DS': DS, 'policy': policy_str}
+        
+
+    
     # def generateTK(self, GPP, CT, UASK, g_u):
     #     pass
 

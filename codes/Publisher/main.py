@@ -31,11 +31,13 @@ async def main_loop(setting):
             message_text,plain_text = message.get()
             message_object = json.loads(message_text)
             plain_text_object = json.loads(plain_text)
+            # print(type(message_object))
             tasks = [
                 asyncio.ensure_future(MQTT_client.publish('message/public', message_text.encode(encoding='utf-8'), qos=QOS_2)),
             ]
             # datetime_string = datetime.datetime.fromtimestamp(message_object['UTC-Time']).strftime('%Y-%m-%d %H:%M:%S')
-            # Rende Table
+            # Render Table
+
             render = Render()
             render.table(
                 CPU_Temperature = str(plain_text_object['CPU_Temperature']),
@@ -49,6 +51,7 @@ async def main_loop(setting):
                 Topic = '/message/public',
                 # Time = datetime_string
             )
+
             await asyncio.wait(tasks)
             await MQTT_client.disconnect()
             time.sleep(int(setting['IntervelTimeSecond']))
