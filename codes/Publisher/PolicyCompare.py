@@ -16,15 +16,72 @@ class PolicyCompare:
         setting = self.load_setting()
         old_policy_str = setting['Policy']
         new_policy_str = setting['NewPolicy']
+
+        #string->policy object
         old_policy = self.util.createPolicy(old_policy_str)
         new_policy = self.util.createPolicy(new_policy_str)
-        return(old_policy,new_policy)
+        # print(old_policy)
+        secret = self.group.random()
+        
+        #calculate shares
+        old_shares_list = self.util.calculateSharesList(secret, old_policy)
+        new_shares_list = self.util.calculateSharesList(secret, new_policy)
+
+        I_M_index=0
+        I_M=[]
+        old_row_i=[]
+        old_policyM=[]
+        for x in old_shares_list:
+            I_M_index+=1
+            I_M.append(I_M_index)
+            old_row_i.append(x[0])
+            old_policyM.append(x[0])
+        new_row_i=[]
+        for x in new_shares_list:
+            new_row_i.append(x[0])
+        print(len(I_M))
+        I1=[]
+        I2=[]
+        I3=[]
+
+        for indexJ , j in enumerate(new_row_i,start=1):
+            if j in old_policyM:
+                if I_M!=[]:
+                    for indexI, i in enumerate(old_policyM,start=1):
+                        if indexI in I_M and old_row_i[indexI-1]==new_row_i[indexJ-1]:
+                            I1.append((indexJ,indexI))
+                            I_M.remove(indexI)
+                else: 
+                    if j in old_policyM:
+                        for indexK, k in enumerate(old_policyM,start=1):
+                            if j==k:
+                                I2.append((indexJ,indexK))
+                                break
+            else:
+                I3.append((indexJ,0))            
+
+        print("I_M:",I_M)
+        print("I1 list:",I1)
+        print("I2 list:",I2)
+        print("I3 list:",I3)
+
+# Policy: ((WORKER and OFFICER) and (DEVELOPER or MAINTAINER))
+# NewPolicy: ((OFFICER or WORKER) and MAINTAINER)
+
+# Policy: (A and (B and (C and D)))
+# NewPolicy: ((A or B) and (B and (D and (B or E))))
+
+        old_shares_dict = dict([(x[0].getAttributeAndIndex(), x[1]) for x in old_shares_list])
+        new_shares_dict = dict([(x[0].getAttributeAndIndex(), x[1]) for x in new_shares_list])
+        # print(old_shares_dict)
+        # print(new_shares_dict)
+
+        return(old_shares_dict,new_shares_dict)
     
 
 if __name__ == '__main__':
     groupObj = PairingGroup('SS512')
     pc = PolicyCompare(groupObj)
     old,new=pc.compare()
-    
-    print(type(old))
-    print(type(new))
+    # print(type(old),old)
+    # print(type(new),new)
