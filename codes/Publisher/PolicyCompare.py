@@ -36,8 +36,13 @@ class PolicyCompare:
             I_M.append(I_M_index)
             old_row_i.append(x[0])
             old_policyM.append(x[0])
+
         new_row_i=[]
+        I_M_prime_index=0
+        I_M_prime=[]
         for x in new_shares_list:
+            I_M_prime_index+=1
+            I_M_prime.append(I_M_prime_index)
             new_row_i.append(x[0])
         print(len(I_M))
         I1=[]
@@ -46,19 +51,21 @@ class PolicyCompare:
 
         for indexJ , j in enumerate(new_row_i,start=1):
             if j in old_policyM:
-                if I_M!=[]:
-                    for indexI, i in enumerate(old_policyM,start=1):
-                        if indexI in I_M and old_row_i[indexI-1]==new_row_i[indexJ-1]:
-                            I1.append((indexJ,indexI))
-                            I_M.remove(indexI)
-                else: 
-                    if j in old_policyM:
-                        for indexK, k in enumerate(old_policyM,start=1):
-                            if j==k:
-                                I2.append((indexJ,indexK))
-                                break
+                for indexI, i in enumerate(old_policyM,start=1):
+                    if I_M!=[] and (indexI in I_M and old_row_i[indexI-1]==new_row_i[indexJ-1]):
+                        I1.append((indexJ,indexI))
+                        # print("before rm I:",indexI,I_M)
+                        I_M.remove(indexI)
+                        # print("after rm I:",indexI,I_M)
+                        # print("before rm J:",indexJ,I_M_prime)
+                        I_M_prime.remove(indexJ) 
+                        # print("after rm J:",indexJ,I_M_prime)
+                    if (indexJ in I_M_prime) and (indexI not in I_M) and (old_row_i[indexI-1]==new_row_i[indexJ-1]):
+                        I2.append((indexJ,indexI))
             else:
                 I3.append((indexJ,0))            
+
+
 
         print("I_M:",I_M)
         print("I1 list:",I1)

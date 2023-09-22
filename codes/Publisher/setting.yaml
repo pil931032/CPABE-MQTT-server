@@ -4,4 +4,4 @@ BrockerLoginUser: Publisher-1
 BrockerLoginPassword: abc123
 IntervelTimeSecond: 2
 Policy: (A and (B and (C and D)))
-NewPolicy: ((A or B) and (B and (D and (B or E))))
+NewPolicy: ((A or B) and (B and (D and (B or (D or C))))))
