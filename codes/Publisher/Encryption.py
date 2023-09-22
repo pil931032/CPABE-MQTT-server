@@ -12,6 +12,7 @@ import hashlib
 import yaml
 import requests
 import warnings
+from PolicyCompare import PolicyCompare
 
 class Encryption:
     def load_setting(self):
@@ -84,7 +85,15 @@ class Encryption:
         # Generate A String for AES Key
         AES_key_before_serialization  = PairingGroup('SS512').random(GT)
         AES_Key_base64_utf8 = objectToBytes(AES_key_before_serialization,PairingGroup('SS512')).decode("utf-8")
-        CT = dac.encrypt(GPP, policy_str, AES_key_before_serialization, authorities)
+
+        CT_with_secret = dac.encrypt(GPP, policy_str, AES_key_before_serialization, authorities)
+        secret=CT_with_secret['secret']
+        print("Encryption:",secret)
+        CT = CT_with_secret.pop('secret')
+
+        pc = PolicyCompare(PairingGroup('SS512'))
+        I1,I2,I3 = pc.compare(secret)
+
         cipher_AES_key = objectToBytes(CT, PairingGroup('SS512')).decode("utf-8")
         cipher_text = self.AES_encrypt(message,AES_Key_base64_utf8)
         # print("Origin AES Key")

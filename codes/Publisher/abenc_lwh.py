@@ -43,9 +43,10 @@ class ABENCLWH(DACMACS):
         
         _, APK, authAttrs = authority
         policy = self.util.createPolicy(policy_str)
-        print(policy)
-        print(type(policy))
+        # print(policy)
+        # print(type(policy))
         secret = self.group.random()
+        print("abenc_lwh:",secret)
         shares = self.util.calculateSharesList(secret, policy)  #list
         # print(shares)
         shares = dict([(x[0].getAttributeAndIndex(), x[1]) for x in shares])  #dict
@@ -65,7 +66,7 @@ class ABENCLWH(DACMACS):
             D[attr] = APK['g_beta_inv'] ** r_i
             DS[attr] = ~(APK['g_beta_gamma'] ** r_i)
         
-        return {'C1': C1, 'C2': C2, 'C3': C3, 'C': C, 'D': D, 'DS': DS, 'policy': policy_str}
+        return {'C1': C1, 'C2': C2, 'C3': C3, 'C': C, 'D': D, 'DS': DS, 'policy': policy_str, 'secret': secret}
         
 
     
