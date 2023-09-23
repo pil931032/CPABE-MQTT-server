@@ -83,16 +83,32 @@ class Encryption:
         GPP,authorities = self.get_global_parameter()
         # print(authorities)
         # Generate A String for AES Key
-        AES_key_before_serialization  = PairingGroup('SS512').random(GT)
+        AES_key_before_serialization = PairingGroup('SS512').random(GT)
         AES_Key_base64_utf8 = objectToBytes(AES_key_before_serialization,PairingGroup('SS512')).decode("utf-8")
 
         CT_with_secret = dac.encrypt(GPP, policy_str, AES_key_before_serialization, authorities)
-        secret=CT_with_secret['secret']
-        print("Encryption:",secret)
-        CT = CT_with_secret.pop('secret')
+        
+        secret=CT_with_secret.pop('secret')
+        # print("secret in Encryption:",secret)
+        old_shares = CT_with_secret.pop('old_shares')
+        # print("old shares in Encryption.py",old_shares)
+        CT_without_secret = CT_with_secret
+        CT = CT_without_secret
+        # C_test = CT_without_secret['C']
+        # print(CT_without_secret['C']['WORKER'])
 
         pc = PolicyCompare(PairingGroup('SS512'))
-        I1,I2,I3 = pc.compare(secret)
+        I1,I2,I3,new_shares_list = pc.compare(secret,old_shares)
+        # print("I1 list:",I1)
+        # print("I2 list:",I2)
+        # print("I3 list:",I3)
+        # print("old_shares_list:",old_shares)
+        # print("new_shares_list:",new_shares_list)
+
+        old_shares_dict = dict([(x[0].getAttributeAndIndex(), x[1]) for x in old_shares])
+        new_shares_dict = dict([(x[0].getAttributeAndIndex(), x[1]) for x in new_shares_list])
+        # print("old_shares_dict:",old_shares_dict)
+        # print("new_shares_dict:",new_shares_dict)
 
         cipher_AES_key = objectToBytes(CT, PairingGroup('SS512')).decode("utf-8")
         cipher_text = self.AES_encrypt(message,AES_Key_base64_utf8)
@@ -103,10 +119,6 @@ class Encryption:
         bytesToObject(test_d,PairingGroup('SS512'))
         # print('Success!',cipher_AES_key)
         return (cipher_AES_key,cipher_text)
-    
-    # def policyCompare(): #policy compare algorithm
-        
-    #     return I_1,I_2,I_3
 
 if __name__ == '__main__':
     encryption = Encryption()

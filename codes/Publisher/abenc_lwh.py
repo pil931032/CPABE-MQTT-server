@@ -46,11 +46,12 @@ class ABENCLWH(DACMACS):
         # print(policy)
         # print(type(policy))
         secret = self.group.random()
-        print("abenc_lwh:",secret)
+        # print("secret in abenc_lwh:",secret)
         shares = self.util.calculateSharesList(secret, policy)  #list
-        # print(shares)
+        old_shares = shares #preserved for policy compare
+        # print("old shares in abenc:",old_shares)
         shares = dict([(x[0].getAttributeAndIndex(), x[1]) for x in shares])  #dict
-        # print(shares)
+
         C1 = k * (APK['e_alpha'] ** secret)
         C2 = GPP['g'] ** secret
         C3 = APK['g_beta_inv'] ** secret
@@ -66,7 +67,7 @@ class ABENCLWH(DACMACS):
             D[attr] = APK['g_beta_inv'] ** r_i
             DS[attr] = ~(APK['g_beta_gamma'] ** r_i)
         
-        return {'C1': C1, 'C2': C2, 'C3': C3, 'C': C, 'D': D, 'DS': DS, 'policy': policy_str, 'secret': secret}
+        return {'C1': C1, 'C2': C2, 'C3': C3, 'C': C, 'D': D, 'DS': DS, 'policy': policy_str, 'secret': secret, 'old_shares': old_shares}
         
 
     

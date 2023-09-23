@@ -12,20 +12,22 @@ class PolicyCompare:
         with open('setting.yaml', 'r') as f:
             return yaml.safe_load(f)
         
-    def compare(self,s): 
+    def compare(self,s,old_shares): 
         setting = self.load_setting()
-        old_policy_str = setting['Policy']
+        # old_policy_str = setting['Policy']
         new_policy_str = setting['NewPolicy']
 
-        #string->policy object
-        old_policy = self.util.createPolicy(old_policy_str)
+    #string->policy object
+        # old_policy = self.util.createPolicy(old_policy_str)
         new_policy = self.util.createPolicy(new_policy_str)
-        # print(old_policy)
+
         # secret = self.group.random()
         secret = s
-        print("PolicyCompare",secret)
-        #calculate shares
-        old_shares_list = self.util.calculateSharesList(secret, old_policy)
+
+    #calculate shares
+        # old_shares_list = self.util.calculateSharesList(secret, old_policy)
+        old_shares_list = old_shares
+        # print("old shares in PolicyCompare:",old_shares_list)
         new_shares_list = self.util.calculateSharesList(secret, new_policy)
 
         I_M_index=0
@@ -81,14 +83,23 @@ class PolicyCompare:
         # print(old_shares_dict)
         # print(new_shares_dict)
 
-        return(I1,I2,I3)
+        return(I1,I2,I3,new_shares_list)
     
 
 if __name__ == '__main__':
     groupObj = PairingGroup('SS512')
     pc = PolicyCompare(groupObj)
+
+    #new random secret
     secret=pc.group.random()
-    I1,I2,I3=pc.compare(secret)
+
+    #produce a new old_shares_list
+    setting = pc.load_setting()
+    old_policy_str = setting['Policy']
+    old_policy = pc.util.createPolicy(old_policy_str)
+    old_shares_list = pc.util.calculateSharesList(secret, old_policy)
+
+    I1,I2,I3,new_shares_list=pc.compare(secret,old_shares_list)
     print("I1 list:",I1)
     print("I2 list:",I2)
     print("I3 list:",I3)
