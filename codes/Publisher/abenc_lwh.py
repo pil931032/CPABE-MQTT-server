@@ -51,18 +51,28 @@ class ABENCLWH(DACMACS):
         old_shares = shares #preserved for policy compare
         # print("old shares in abenc:",old_shares)
         shares = dict([(x[0].getAttributeAndIndex(), x[1]) for x in shares])  #dict
-
+        print(shares)
         C1 = k * (APK['e_alpha'] ** secret)
         C2 = GPP['g'] ** secret
         C3 = APK['g_beta_inv'] ** secret
         C = {}
         D = {}
         DS = {}
+        # if 'WORKER_0' in shares.keys():
+
+            # shares['WORKER'] = shares['WORKER_0']
 
         for attr, s_share in shares.items():
             k_attr = self.util.strip_index(attr)
             r_i = self.group.random()
-            attrPK = authAttrs[attr]
+
+            # attrPK = authAttrs[attr]
+
+            if attr == 'WORKER_0' or attr == 'WORKER_1':
+                attrPK = authAttrs['WORKER']
+            else:
+                attrPK = authAttrs[attr]
+            
             C[attr] = (GPP['g_a'] ** s_share) * ~(attrPK['PK'] ** r_i)
             D[attr] = APK['g_beta_inv'] ** r_i
             DS[attr] = ~(APK['g_beta_gamma'] ** r_i)

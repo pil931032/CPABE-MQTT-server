@@ -14,6 +14,7 @@ import requests
 import warnings
 from PolicyCompare import PolicyCompare
 
+
 class Encryption:
     def load_setting(self):
         with open('setting.yaml', 'r') as f:
@@ -89,24 +90,70 @@ class Encryption:
         CT_with_secret = dac.encrypt(GPP, policy_str, AES_key_before_serialization, authorities)
         
         secret=CT_with_secret.pop('secret')
-        # print("secret in Encryption:",secret)
-        old_shares = CT_with_secret.pop('old_shares')
-        # print("old shares in Encryption.py",old_shares)
+        old_shares_list = CT_with_secret.pop('old_shares')
         CT_without_secret = CT_with_secret
         CT = CT_without_secret
         # C_test = CT_without_secret['C']
         # print(CT_without_secret['C']['WORKER'])
 
+        # EncryptionInfo = dict()
+        # EncryptionInfo['secret'] = secret
+        # EncryptionInfo['old_shares_list'] = old_shares_list
+        # data = json.dump(EncryptionInfo)
+        # with open('EnInfo.json', 'w') as EI:
+        #     json.dump(data, EI)
+        
+
         pc = PolicyCompare(PairingGroup('SS512'))
-        I1,I2,I3,new_shares_list = pc.compare(secret,old_shares)
+        I1,I2,I3,new_shares_list = pc.compare(secret,old_shares_list)
         # print("I1 list:",I1)
         # print("I2 list:",I2)
         # print("I3 list:",I3)
-        # print("old_shares_list:",old_shares)
+        # print("old_shares_list:",old_shares_list)
         # print("new_shares_list:",new_shares_list)
 
-        old_shares_dict = dict([(x[0].getAttributeAndIndex(), x[1]) for x in old_shares])
+        # print(new_shares_list[I1[0][0]-1][1],old_shares_list[I1[0][1]-1][1])
+        # print(new_shares_list[I1[1][0]-1][1],old_shares_list[I1[1][1]-1][1])
+        # print(new_shares_list[I1[2][0]-1][1],old_shares_list[I1[2][1]-1][1])
+        # print(" ")
+        
+        type1_UK, type2_UK_1, type2_UK_2, type3_UK_1, type3_UK_2, type3_UK_3 = [], [], [], [], [], []
+        for i in I1:
+            a = new_shares_list[i[0]-1][1]
+            b = old_shares_list[i[1]-1][1]
+            type1_UK.append(a - b) 
+        print("type1_UK ", type1_UK)
+        
+        for i in I2:
+            a = new_shares_list[i[0]-1][1]
+            b = old_shares_list[i[1]-1][1]
+            type2_UK_1.append(a - b) 
+            type2_UK_2.append(pc.group.random())
+        print("type2_UK_1 ", type2_UK_1)
+        print("type2_UK_2 ", type2_UK_2)
+
+
         new_shares_dict = dict([(x[0].getAttributeAndIndex(), x[1]) for x in new_shares_list])
+        old_shares_dict = dict([(x[0].getAttributeAndIndex(), x[1]) for x in old_shares_list])
+        attr_key = list(new_shares_dict)
+        _, APK, authAttrs = authorities
+        for i in I3:
+            lambda_prime = new_shares_list[i[0]-1][1]
+            
+            attrPK = authAttrs[attr_key[i[0]-1]]
+            r_i_prime = pc.group.random()
+            type3_UK_1.append((GPP['g_a'] ** lambda_prime) * ~(attrPK['PK'] ** r_i_prime))
+            type3_UK_2.append(APK['g_beta_inv'] ** r_i_prime)
+            type3_UK_3.append(~(APK['g_beta_gamma'] ** r_i_prime))
+        print("type3_UK_1", type3_UK_1[0])
+        print("type3_UK_2", type3_UK_2[0])
+        print("type3_UK_3", type3_UK_3[0])
+
+
+
+        
+        
+        # new_shares_dict = dict([(x[0].getAttributeAndIndex(), x[1]) for x in new_shares_list])
         # print("old_shares_dict:",old_shares_dict)
         # print("new_shares_dict:",new_shares_dict)
 
