@@ -161,7 +161,6 @@ class Encryption:
         CT['policy'] = setting['NewPolicy']
         # print(CT)
 
-
         cipher_AES_key = objectToBytes(CT, PairingGroup('SS512')).decode("utf-8")
         cipher_text = self.AES_encrypt(message,AES_Key_base64_utf8)
         # print("Origin AES Key")
