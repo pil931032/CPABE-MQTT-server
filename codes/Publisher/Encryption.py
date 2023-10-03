@@ -122,20 +122,21 @@ class Encryption:
             a = new_shares_list[i[0]-1][1]
             b = old_shares_list[i[1]-1][1]
             type1_UK.append(a - b) 
-        print("type1_UK ", type1_UK)
+        # print("type1_UK ", type1_UK)
         
         for i in I2:
             a = new_shares_list[i[0]-1][1]
             b = old_shares_list[i[1]-1][1]
             type2_UK_1.append(a - b) 
             type2_UK_2.append(pc.group.random())
-        print("type2_UK_1 ", type2_UK_1)
-        print("type2_UK_2 ", type2_UK_2)
+        # print("type2_UK_1 ", type2_UK_1)
+        # print("type2_UK_2 ", type2_UK_2)
 
 
         new_shares_dict = dict([(x[0].getAttributeAndIndex(), x[1]) for x in new_shares_list])
         old_shares_dict = dict([(x[0].getAttributeAndIndex(), x[1]) for x in old_shares_list])
         attr_key = list(new_shares_dict)
+        # print(attr_key)
         _, APK, authAttrs = authorities
         for i in I3:
             lambda_prime = new_shares_list[i[0]-1][1]
@@ -145,17 +146,21 @@ class Encryption:
             type3_UK_1.append((GPP['g_a'] ** lambda_prime) * ~(attrPK['PK'] ** r_i_prime))
             type3_UK_2.append(APK['g_beta_inv'] ** r_i_prime)
             type3_UK_3.append(~(APK['g_beta_gamma'] ** r_i_prime))
-        print("type3_UK_1", type3_UK_1[0])
-        print("type3_UK_2", type3_UK_2[0])
-        print("type3_UK_3", type3_UK_3[0])
+        # print("type3_UK_1", type3_UK_1[0])
+        # print("type3_UK_2", type3_UK_2[0])
+        # print("type3_UK_3", type3_UK_3[0])
+        # print(CT)
+        list_new = list(new_shares_dict)
+        list_old = list(old_shares_dict)
+        for i, j in zip(I1, type1_UK):
+            # print(list_old[i[1]-1])
+            # print(CT['C'][list_old[i[1]-1]])
+            CT['C'][list_old[i[1]-1]] = CT['C'][list_old[i[1]-1]] * (GPP['g_a'] ** j)
+            # print(list_old[i[1]-1])
+            # print("after: \n",CT['C'][list_old[i[1]-1]],"\n")
+        CT['policy'] = setting['NewPolicy']
+        # print(CT)
 
-
-
-        
-        
-        # new_shares_dict = dict([(x[0].getAttributeAndIndex(), x[1]) for x in new_shares_list])
-        # print("old_shares_dict:",old_shares_dict)
-        # print("new_shares_dict:",new_shares_dict)
 
         cipher_AES_key = objectToBytes(CT, PairingGroup('SS512')).decode("utf-8")
         cipher_text = self.AES_encrypt(message,AES_Key_base64_utf8)
@@ -165,7 +170,7 @@ class Encryption:
         test_d = cipher_AES_key.encode('utf-8')
         bytesToObject(test_d,PairingGroup('SS512'))
         # print('Success!',cipher_AES_key)
-        return (cipher_AES_key,cipher_text)
+        return (cipher_AES_key,cipher_text,CT['policy'])  #return CT['policy']
 
 if __name__ == '__main__':
     encryption = Encryption()

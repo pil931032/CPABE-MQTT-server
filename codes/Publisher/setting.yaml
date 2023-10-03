@@ -3,5 +3,5 @@ ProxyIP: ssl-reverse-proxy
 BrockerLoginUser: Publisher-1
 BrockerLoginPassword: abc123
 IntervelTimeSecond: 2
-Policy: ((WORKER and OFFICER) and MAINTAINER)
-NewPolicy: ((OFFICER or WORKER) and (DEVELOPER and WORKER))
+Policy: ((OFFICER and WORKER) or (DEVELOPER or MAINTAINER))
+NewPolicy: ((OFFICER or DEVELOPER) or (WORKER and MAINTAINER))

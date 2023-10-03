@@ -46,7 +46,7 @@ async def main_loop(setting):
                 Plain_text = plain_text,
                 Cipher_Key = message_object['Cipher_AES_Key'],
                 Cipher_Text = message_object['Cipher_Text'],
-                Policy = setting['Policy'],
+                Policy = message_object['policy'],#setting['Policy'],  #showing policy from CT directly
                 Brocker_IP = setting['BrockerIP'],
                 Topic = '/message/public',
                 # Time = datetime_string

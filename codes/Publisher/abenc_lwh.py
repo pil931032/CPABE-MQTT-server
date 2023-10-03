@@ -7,23 +7,23 @@ class ABENCLWH(DACMACS):
     def __init__(self, groupObj):
         self.util = SecretUtil(groupObj, verbose=False)  #Create Secret Sharing Scheme
         self.group = groupObj    #:Prime order group
-    def setup(self):
-        '''Global Setup (executed by CA)'''
-        #:In global setup, a bilinear group G of prime order p is chosen
-        #:The global public parameters, GP and p, and a generator g of G. A random oracle H maps global identities GID to elements of G
+    # def setup(self):
+    #     '''Global Setup (executed by CA)'''
+    #     #:In global setup, a bilinear group G of prime order p is chosen
+    #     #:The global public parameters, GP and p, and a generator g of G. A random oracle H maps global identities GID to elements of G
     
-        #:group contains 
-        #:the prime order p is contained somewhere within the group object
-        g = self.group.random(G1)
-        #: The oracle that maps global identities GID onto elements of G
-        #:H = lambda str: g** group.hash(str)
-        H = lambda x: self.group.hash(x, G1)
-        a = self.group.random()
-        g_a = g ** a
-        GPP = {'g': g, 'g_a': g_a, 'H': H}
-        GMK = {'a': a}
+    #     #:group contains 
+    #     #:the prime order p is contained somewhere within the group object
+    #     g = self.group.random(G1)
+    #     #: The oracle that maps global identities GID onto elements of G
+    #     #:H = lambda str: g** group.hash(str)
+    #     H = lambda x: self.group.hash(x, G1)
+    #     a = self.group.random()
+    #     g_a = g ** a
+    #     GPP = {'g': g, 'g_a': g_a, 'H': H}
+    #     GMK = {'a': a}
         
-        return (GPP, GMK)
+    #     return (GPP, GMK)
 
     # def registerUser(self, GPP):
     #     pass
@@ -51,7 +51,7 @@ class ABENCLWH(DACMACS):
         old_shares = shares #preserved for policy compare
         # print("old shares in abenc:",old_shares)
         shares = dict([(x[0].getAttributeAndIndex(), x[1]) for x in shares])  #dict
-        print(shares)
+        # print(authAttrs)
         C1 = k * (APK['e_alpha'] ** secret)
         C2 = GPP['g'] ** secret
         C3 = APK['g_beta_inv'] ** secret
