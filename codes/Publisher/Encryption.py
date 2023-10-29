@@ -152,12 +152,13 @@ class Encryption:
         # print(CT)
         list_new = list(new_shares_dict)
         list_old = list(old_shares_dict)
+        
         for i, j in zip(I1, type1_UK):
-            # print(list_old[i[1]-1])
-            # print(CT['C'][list_old[i[1]-1]])
-            CT['C'][list_old[i[1]-1]] = CT['C'][list_old[i[1]-1]] * (GPP['g_a'] ** j)
-            # print(list_old[i[1]-1])
-            # print("after: \n",CT['C'][list_old[i[1]-1]],"\n")
+            print(list_old[i[1]-1],"before update:")
+            print(CT['C'][list_old[i[1]-1]])  #print parameter 'C' before updation
+            CT['C'][list_old[i[1]-1]] = CT['C'][list_old[i[1]-1]] * (GPP['g_a'] ** j) #update parameter 'C'
+            print(list_old[i[1]-1],"after update:")
+            print(CT['C'][list_old[i[1]-1]],"\n")  #print parameter 'C' after updation
         CT['policy'] = setting['NewPolicy']
         # print(CT)
 

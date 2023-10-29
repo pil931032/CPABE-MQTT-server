@@ -66,12 +66,12 @@ class ABENCLWH(DACMACS):
             k_attr = self.util.strip_index(attr)
             r_i = self.group.random()
 
-            # attrPK = authAttrs[attr]
+            attrPK = authAttrs[attr]
 
-            if attr == 'WORKER_0' or attr == 'WORKER_1':
-                attrPK = authAttrs['WORKER']
-            else:
-                attrPK = authAttrs[attr]
+            # if attr == 'WORKER_0' or attr == 'WORKER_1':
+            #     attrPK = authAttrs['WORKER']
+            # else:
+            #     attrPK = authAttrs[attr]
             
             C[attr] = (GPP['g_a'] ** s_share) * ~(attrPK['PK'] ** r_i)
             D[attr] = APK['g_beta_inv'] ** r_i

@@ -1,7 +1,14 @@
 Alice: 
-  - WORKER
-  - MAINTAINER
-
+  - A
+  - B
+  - C
+  - D
+  - E
+  - F
+  - G
+  - H
 Bob:
-  - OFFICER
-  - DEVELOPER
+  - A
+  - B
+  - C
+  - D
