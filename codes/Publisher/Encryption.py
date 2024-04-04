@@ -91,6 +91,18 @@ class Encryption:
         
         secret=CT_with_secret.pop('secret')
         old_shares_list = CT_with_secret.pop('old_shares')
+
+        # update_data = dict(
+        #     secret1 = secret,
+        #     old_shares_list1 = old_shares_list
+        # )
+        # print(type(update_data))
+        # print(update_data)
+        # with open('update_data.yml', 'w') as outfile:
+        #     yaml.dump(update_data, outfile, default_flow_style=False)
+        # with open('update_data.yaml', 'w') as yaml_file:
+        #     yaml.dump(update_data, yaml_file, default_flow_style=False)
+
         CT_without_secret = CT_with_secret
         CT = CT_without_secret
         # C_test = CT_without_secret['C']

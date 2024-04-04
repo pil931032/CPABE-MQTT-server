@@ -23,14 +23,25 @@ def load_setting():
 async def main_loop(setting):
     # MQTT send
     MQTT_client = MQTTClient()
-    
+
+    # -----send the same message-----
+    message = Message()
+    message_text,plain_text = message.get()
+    message_object = json.loads(message_text)
+    plain_text_object = json.loads(plain_text)
+    # -----send the same message-----
+
     while True:
         try:
             await MQTT_client.connect('mqtt://'+setting['BrockerIP']+'/')
-            message = Message()
-            message_text,plain_text = message.get()
-            message_object = json.loads(message_text)
-            plain_text_object = json.loads(plain_text)
+
+            # -----send different message-----
+            # message = Message()
+            # message_text,plain_text = message.get()
+            # message_object = json.loads(message_text)
+            # plain_text_object = json.loads(plain_text)
+            # -----send different message-----
+
             # print(type(message_object))
             tasks = [
                 asyncio.ensure_future(MQTT_client.publish('message/public', message_text.encode(encoding='utf-8'), qos=QOS_2)),
