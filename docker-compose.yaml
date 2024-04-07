@@ -49,35 +49,35 @@ services:
     networks:
       - devnetwork
 
-  #Publisher
-  Publisher:
-    image: cpabe-dev-image:0.0
-    build: ./dockerfiles/Base/
-    tty: true
-    volumes:
-      - ./codes/Publisher/:/code
-    working_dir: /code
-    command: sh
-    # environment:
-    networks:
-      devnetwork:
+  # #Publisher
+  # Publisher:
+  #   image: cpabe-dev-image:0.0
+  #   build: ./dockerfiles/Base/
+  #   tty: true
+  #   volumes:
+  #     - ./codes/Publisher/:/code
+  #   working_dir: /code
+  #   command: sh
+  #   # environment:
+  #   networks:
+  #     devnetwork:
 
 
 
-  #Subscriber
-  Subscriber:
-    image: cpabe-dev-image:0.0
-    build: ./dockerfiles/Base/
-    tty: true
-    volumes:
-      - ./codes/Subscriber/:/code
-    working_dir: /code
-    # ports:
-      # - "80:80"
-    command: sh
-    # environment:
-    networks:
-      devnetwork:
+  # #Subscriber
+  # Subscriber:
+  #   image: cpabe-dev-image:0.0
+  #   build: ./dockerfiles/Base/
+  #   tty: true
+  #   volumes:
+  #     - ./codes/Subscriber/:/code
+  #   working_dir: /code
+  #   # ports:
+  #     # - "80:80"
+  #   command: sh
+  #   # environment:
+  #   networks:
+  #     devnetwork:
 
 
 
