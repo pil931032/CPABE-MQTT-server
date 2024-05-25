@@ -86,3 +86,27 @@ def subscriber_decrypt_keys(user,password):
   keys = keys[user]
   keys:str = json.dumps({'decrypt-keys':keys})
   return keys
+
+
+# Load trusted_party_passwords
+def load_trusted_party_passwords():
+    with open('trusted_party_password.yaml', 'r') as f:
+        return yaml.safe_load(f)
+
+@app.route("/trusted_party/decrypt-keys/<user>/<password>", methods=['GET', 'POST'])
+@cross_origin()
+def trusted_party_decrypt_keys(user,password):
+  # Example curl  --request GET  http://127.0.0.1:443/subscriber/decrypt-keys/Alice/ccc123
+  # Verify Auth
+  user_password = load_trusted_party_passwords()
+  try:
+    if user_password[user] != password:
+      return {'code':0}
+  except:
+    return {'code':0}
+  # Send Global Parameters
+  global_parameters = dict()
+  keys = load_keys()
+  keys = keys[user]
+  keys:str = json.dumps({'decrypt-keys':keys})
+  return keys
