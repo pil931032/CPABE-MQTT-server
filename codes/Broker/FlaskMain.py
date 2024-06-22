@@ -3,7 +3,15 @@ from flask_cors import CORS, cross_origin
 import yaml
 import json
 from OpenSSL import SSL
-
+from charm.toolbox.pairinggroup import PairingGroup,ZR,G1,GT,pair
+from charm.toolbox.secretutil import SecretUtil
+from charm.toolbox.ABEncMultiAuth import ABEncMultiAuth
+from abenc_lwh import ABENCLWH
+from charm.core.engine.util import objectToBytes,bytesToObject
+# from StringEncode import StringEncode
+from base64 import b64encode,b64decode
+from Crypto.Cipher import AES
+from Crypto.Random import get_random_bytes
 # OpenSSL
 context = SSL.Context(SSL.TLSv1_2_METHOD)
 context.use_privatekey_file('ca.key')
@@ -123,3 +131,34 @@ def Ciphertext():
     yaml.dump(CT, f)
 
   return {"result": CT}
+
+
+# keyword search
+@app.route("/SearchingKW/", methods=['GET', 'POST'])
+@cross_origin()
+def SearchingKW():
+  TD = request.form.get('TD')
+  dac = ABENCLWH(PairingGroup('SS512'))
+  with open("brokerCT.yaml") as stream:
+    try:
+      cipher_key = yaml.safe_load(stream)
+    except yaml.YAMLError as exc:
+      print(exc)
+  CT =  bytesToObject(cipher_key,PairingGroup('SS512'))
+  TrapDoor =  bytesToObject(TD,PairingGroup('SS512'))
+
+  left = pair(CT['C2'], TrapDoor['T1'])
+  rho3 = dac.group.random()
+  right_tmp = rho3 - rho3
+  for i, j in zip(CT['I_hat'], TrapDoor['T5']):
+    right_tmp = right_tmp + i * j  
+    right = CT['E'] ** (TrapDoor['T3'] * right_tmp)
+
+  print("left:  ", left)
+  print("right: ", right)
+  if left == right:
+    rlt = "left = right"
+  else:
+    rlt = "false"
+    
+  return {"result": rlt}
