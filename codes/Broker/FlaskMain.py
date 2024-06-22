@@ -110,3 +110,16 @@ def trusted_party_decrypt_keys(user,password):
   keys = keys[user]
   keys:str = json.dumps({'decrypt-keys':keys})
   return keys
+
+
+  
+# Receive Ciphertext
+@app.route("/Ciphertext/", methods=['GET', 'POST'])
+@cross_origin()
+def Ciphertext():
+  CT = request.form.get('CT')
+
+  with open('brokerCT.yaml', 'w') as f:
+    yaml.dump(CT, f)
+
+  return {"result": CT}
