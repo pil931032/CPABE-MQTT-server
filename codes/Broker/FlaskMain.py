@@ -121,7 +121,7 @@ def trusted_party_decrypt_keys(user,password):
 
 
   
-# Receive Ciphertext
+# Receive ABE Ciphertext (Cipher AES Key)
 @app.route("/Ciphertext/", methods=['GET', 'POST'])
 @cross_origin()
 def Ciphertext():
@@ -131,6 +131,17 @@ def Ciphertext():
     yaml.dump(CT, f)
 
   return {"result": CT}
+
+# Receive encrypted message
+@app.route("/EncMessage/", methods=['GET', 'POST'])
+@cross_origin()
+def EncMessage():
+  EncM = request.form.get('encm')
+
+  with open('brokerEncM.yaml', 'w') as f:
+    yaml.dump(EncM, f)
+
+  return {"result": EncM}
 
 
 # keyword search
@@ -157,8 +168,49 @@ def SearchingKW():
   print("left:  ", left)
   print("right: ", right)
   if left == right:
-    rlt = "left = right"
+    rslt = "keywords match"
   else:
-    rlt = "false"
-    
-  return {"result": rlt}
+    rslt = "no match"
+
+  return {"result": rslt}
+
+# Subscribe Emulation: subscribe(tobic, trapdoor)
+@app.route("/SubscriberEmu/", methods=['GET', 'POST'])
+@cross_origin()
+def SubscriberEmu():
+  TD = request.form.get('TD')
+  dac = ABENCLWH(PairingGroup('SS512'))
+  with open("brokerCT.yaml") as stream:
+    try:
+      cipher_key = yaml.safe_load(stream)
+    except yaml.YAMLError as exc:
+      print(exc)
+  
+  with open("brokerEncM.yaml") as stream:
+    try:
+      cipher_text = yaml.safe_load(stream)
+    except yaml.YAMLError as exc:
+      print(exc)
+
+
+  CT =  bytesToObject(cipher_key,PairingGroup('SS512'))
+  TrapDoor =  bytesToObject(TD,PairingGroup('SS512'))
+
+  left = pair(CT['C2'], TrapDoor['T1'])
+  rho3 = dac.group.random()
+  right_tmp = rho3 - rho3
+  for i, j in zip(CT['I_hat'], TrapDoor['T5']):
+    right_tmp = right_tmp + i * j  
+    right = CT['E'] ** (TrapDoor['T3'] * right_tmp)
+
+  # print("left:  ", left)
+  # print("right: ", right)
+  if left == right:
+    rslt1 = cipher_key
+    rslt2 = cipher_text
+  else:
+    rslt1 = "no match"
+    rslt2 = "no match"
+  # print(type(cipher_text))
+
+  return {"result": rslt1,"result2": rslt2}
