@@ -206,11 +206,22 @@ def SubscriberEmu():
   # print("left:  ", left)
   # print("right: ", right)
   if left == right:
+    print("true")
     rslt1 = cipher_key
     rslt2 = cipher_text
   else:
+    print("false")
     rslt1 = "no match"
     rslt2 = "no match"
   # print(type(cipher_text))
 
-  return {"result": rslt1,"result2": rslt2}
+  return {"result1": rslt1,"result2": rslt2}
+
+# Receive Policy Update keys
+@app.route("/PolicyUpdateKey/", methods=['GET', 'POST'])
+@cross_origin()
+def PolicyUpdateKey():
+  puk = request.form.get('puk')
+  with open('PolicyUpdateKey.yaml', 'w') as f:
+    yaml.dump(puk, f)
+  return {"result": puk}
