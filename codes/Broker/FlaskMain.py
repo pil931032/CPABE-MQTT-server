@@ -12,6 +12,7 @@ from charm.core.engine.util import objectToBytes,bytesToObject
 from base64 import b64encode,b64decode
 from Crypto.Cipher import AES
 from Crypto.Random import get_random_bytes
+from Decryption import Decryption
 # OpenSSL
 context = SSL.Context(SSL.TLSv1_2_METHOD)
 context.use_privatekey_file('ca.key')
@@ -225,3 +226,36 @@ def PolicyUpdateKey():
   with open('PolicyUpdateKey.yaml', 'w') as f:
     yaml.dump(puk, f)
   return {"result": puk}
+
+# receive CTUCK from TrustedParty and check update 
+@app.route("/UpdateCheck/", methods=['GET', 'POST'])
+@cross_origin()
+def UpdateCheck():
+  GPP = request.form.get('GPP')
+  AuthoritySecretKeys = request.form.get('AuthoritySecretKeys')
+  UserKey = request.form.get('UserKey')
+  with open("brokerCT.yaml") as stream:
+    try:
+      CT = yaml.safe_load(stream)
+    except yaml.YAMLError as exc:
+      print(exc)
+  decryption = Decryption()
+  TK1a = decryption.outsourcing_decryption(GPP, CT, AuthoritySecretKeys, UserKey)
+  # print(type(TK1a))
+  # print(TK1a)
+  # TK = objectToBytes(TK1a, PairingGroup('SS512')).decode("utf-8")
+  with open('verificationToken.yaml','w') as f:
+    yaml.dump(TK1a, f)
+  return {"result": "CTUCK has been sent and verification token generated"}
+
+# request VTK for verification by publisher
+@app.route("/requestVTK/", methods=['GET', 'POST'])
+@cross_origin()
+def requestVTK():
+  with open("verificationToken.yaml") as stream:
+    try:
+      VTK = yaml.safe_load(stream)
+    except yaml.YAMLError as exc:
+      print(exc)
+  # print(VTK)
+  return {"result": VTK}
