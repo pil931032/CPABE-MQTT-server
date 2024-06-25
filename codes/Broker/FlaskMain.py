@@ -165,17 +165,16 @@ def SearchingKW():
   for i, j in zip(CT['I_hat'], TrapDoor['T5']):
     right_tmp = right_tmp + i * j  
     right = CT['E'] ** (TrapDoor['T3'] * right_tmp)
-
+  print("right: ", right)
   print("left:  ", left)
   left_bytes = objectToBytes(left, PairingGroup('SS512')).decode("utf-8")
-  print("right: ", right)
   right_bytes = objectToBytes(right, PairingGroup('SS512')).decode("utf-8")
   if left == right:
     rslt = "match"
     l = left_bytes
     r = right_bytes
   else:
-    rslt = "no match"
+    rslt = "not match"
     l = left_bytes
     r = right_bytes
   return {"result": rslt, "left": l, "right": r}
@@ -198,7 +197,6 @@ def SubscriberEmu():
     except yaml.YAMLError as exc:
       print(exc)
 
-
   CT =  bytesToObject(cipher_key,PairingGroup('SS512'))
   TrapDoor =  bytesToObject(TD,PairingGroup('SS512'))
 
@@ -209,18 +207,17 @@ def SubscriberEmu():
     right_tmp = right_tmp + i * j  
     right = CT['E'] ** (TrapDoor['T3'] * right_tmp)
 
-  # print("left:  ", left)
-  # print("right: ", right)
+  print("left =  ", left)
+  print("right = ", right)
   if left == right:
-    print("true")
+    print("match")
     rslt1 = cipher_key
     rslt2 = cipher_text
   else:
-    print("false")
-    rslt1 = "no match"
-    rslt2 = "no match"
+    print("not match")
+    rslt1 = "not match"
+    rslt2 = "not match"
   # print(type(cipher_text))
-
   return {"result1": rslt1,"result2": rslt2}
 
 # Receive Policy Update keys
