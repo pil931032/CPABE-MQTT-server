@@ -167,13 +167,18 @@ def SearchingKW():
     right = CT['E'] ** (TrapDoor['T3'] * right_tmp)
 
   print("left:  ", left)
+  left_bytes = objectToBytes(left, PairingGroup('SS512')).decode("utf-8")
   print("right: ", right)
+  right_bytes = objectToBytes(right, PairingGroup('SS512')).decode("utf-8")
   if left == right:
-    rslt = "keywords match"
+    rslt = "match"
+    l = left_bytes
+    r = right_bytes
   else:
     rslt = "no match"
-
-  return {"result": rslt}
+    l = left_bytes
+    r = right_bytes
+  return {"result": rslt, "left": l, "right": r}
 
 # Subscribe Emulation: subscribe(tobic, trapdoor)
 @app.route("/SubscriberEmu/", methods=['GET', 'POST'])
